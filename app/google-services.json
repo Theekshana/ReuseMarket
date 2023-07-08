@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "739688854802",
+    "project_id": "reusemarket-ef5b4",
+    "storage_bucket": "reusemarket-ef5b4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:739688854802:android:f6d9fa5776a24d534bafcb",
+        "android_client_info": {
+          "package_name": "com.example.reusemarket"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "739688854802-1klvfked6pvqufgmmju5dhgf7knnj7n7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.reusemarket",
+            "certificate_hash": "967ffb7dc57322bdc5e0035be746daa81b82e2a0"
+          }
+        },
+        {
+          "client_id": "739688854802-n3hbku3ckqctubkmjgk0q2cfpiksdbqd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCmghCpHMb7iWlkr7_qf6VITRMR-gKmzrI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "739688854802-n3hbku3ckqctubkmjgk0q2cfpiksdbqd.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
