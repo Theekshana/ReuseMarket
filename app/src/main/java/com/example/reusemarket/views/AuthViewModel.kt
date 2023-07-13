@@ -4,22 +4,35 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.reusemarket.constants.UIState
 import com.example.reusemarket.repository.AuthRepository
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount
-import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.firestore.auth.Token
-import com.google.firebase.firestore.auth.User
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.grpc.internal.SharedResourceHolder.Resource
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class AuthViewModel () : ViewModel() {
+class AuthViewModel @Inject constructor(
+    private val repository: AuthRepository,
+) : ViewModel() {
 
+    //current sign-up status
+    private val _signUp = MutableLiveData<String>(null)
+    val signUp: LiveData<String>
+        get() = _signUp
+
+    /**
+     * Initiates the sign-up process with the provided email and password.
+     *
+     * @param email The email address used for sign-up.
+     * @param password The password associated with the account being created.
+     */
+    fun signUpInfo(email: String, password: String) {
+        viewModelScope.launch {
+            val result = repository.signUp(email, password)
+            //_signUp.value = result.toString()
+
+        }
+
+    }
 
 
 }
