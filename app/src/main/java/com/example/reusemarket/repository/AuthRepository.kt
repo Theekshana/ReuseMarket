@@ -11,5 +11,5 @@ import javax.inject.Inject
 
 
 interface AuthRepository {
-
+    suspend fun signUp(email: String, password: String)
 }
