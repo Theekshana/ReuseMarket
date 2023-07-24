@@ -37,7 +37,8 @@ class LoginFragment : Fragment() {
                 try {
                     val credential = oneTapClient!!.getSignInCredentialFromIntent(result.data)
                     viewModel.signInWithGoogle(credential)
-                    navigateToListFragment()
+                   // navigateToListFragment()
+                    navigateToAddItemFragment()
                 } catch (e: ApiException) {
                     TODO("Exception handling")
                 }
@@ -98,7 +99,8 @@ class LoginFragment : Fragment() {
 
                     is UIState.Success<*> -> {
 
-                        navigateToListFragment()
+                        //navigateToListFragment()
+                        navigateToAddItemFragment()
 
                     }
 
@@ -159,9 +161,14 @@ class LoginFragment : Fragment() {
         findNavController().navigate(R.id.action_loginFragment_to_listFragment)
     }
 
+    private fun navigateToAddItemFragment() {
+        findNavController().navigate(R.id.action_loginFragment_to_addItemFragment)
+    }
+
     private fun checkAlreadyLoginUser() {
         if (viewModel.isAlreadyLoggedIn()) {
-            navigateToListFragment()
+            //navigateToListFragment()
+            navigateToAddItemFragment()
         }
 
     }

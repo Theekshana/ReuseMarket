@@ -7,7 +7,7 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:739688854802:android:f6d9fa5776a24d534bafcb",
+        "mobilesdk_app_id": "1:739688854802:android:f90e2fad5586f6574bafcb",
         "android_client_info": {
           "package_name": "com.example.reusemarket"
         }
@@ -22,7 +22,7 @@
           }
         },
         {
-          "client_id": "739688854802-n3hbku3ckqctubkmjgk0q2cfpiksdbqd.apps.googleusercontent.com",
+          "client_id": "739688854802-nnoftf3kpl06esbud3s0tmlea026jk5m.apps.googleusercontent.com",
           "client_type": 3
         }
       ],

@@ -6,26 +6,26 @@ import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
-import java.lang.Exception
 import javax.inject.Inject
 
 class DataRepositoryImpl @Inject constructor(
-    private val firestore: FirebaseFirestore
+     firestore: FirebaseFirestore
     ): DataRepository{
 
     private val itemData = firestore.collection("items")
-    override suspend fun addData(data: Data): Result<UIState> {
+   // val document = database.collection(FirestoreTables.NOTE).document()
+    override suspend fun addDataToItemData(data: Data): Result<UIState> {
         return withContext(Dispatchers.IO){
-            try {
+            runCatching {
                 itemData.add(data).await()
-                Result.success(UIState.Success("Data Added"))
 
-            }catch (e: Exception){
-                Result.failure(e)
 
-            }
+            }.fold(
+                onSuccess = { Result.success(UIState.Success("Data Added")) },
+                onFailure = { Result.failure(it) }
+            )
         }
     }
-    
+
 
 }
