@@ -16,8 +16,6 @@ import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.example.reusemarket.databinding.FragmentAddItemBinding
 import com.example.reusemarket.model.Data
-import com.google.firebase.storage.FirebaseStorage
-import java.util.UUID
 
 
 class AddItemFragment : Fragment() {
@@ -30,40 +28,51 @@ class AddItemFragment : Fragment() {
     private val CAMERA_REQUEST_CODE = 1002
 
 
-    // private var personalCollectionRef = Firebase.firestore.collection("items")
 
+    // Get your image
 
-    private val resultContent =
-        registerForActivityResult(ActivityResultContracts.GetContent()) { result ->
-            //binding.imageView.setImageURI(result)
-            imageUri = result
+            // private var personalCollectionRef = Firebase.firestore.collection("items")
 
-    //Load image 
-            Glide.with(this)
-                .load(imageUri)
-                .into(binding.imageView)
-
+            /*  val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
+        // Callback is invoked after the user selects a media item or closes the
+        // photo picker.
+        if (uri != null) {
+            Log.d("PhotoPicker", "Selected URI: $uri")
+        } else {
+            Log.d("PhotoPicker", "No media selected")
         }
+    }*/
+
+            /* private val resultContent =
+         registerForActivityResult(ActivityResultContracts.GetContent()) { result ->
+             //binding.imageView.setImageURI(result)
+             imageUri = result
+
+     //Load image
+             Glide.with(this)
+                 .load(imageUri)
+                 .into(binding.imageView)
+
+         }*/
+
+            override fun onCreateView(
+                inflater: LayoutInflater, container: ViewGroup?,
+                savedInstanceState: Bundle?,
+            ): View? {
+                // Inflate the layout for this fragment
+                binding = FragmentAddItemBinding.inflate(inflater, container, false)
+
+                viewModel = ViewModelProvider(requireActivity())[AddItemViewModel::class.java]
 
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?,
-    ): View? {
-        // Inflate the layout for this fragment
-        binding = FragmentAddItemBinding.inflate(inflater, container, false)
-
-        viewModel = ViewModelProvider(requireActivity())[AddItemViewModel::class.java]
 
 
+                return binding.root
+            }
 
-
-        return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        /* binding.imageView.setOnClickListener{
+            override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+                super.onViewCreated(view, savedInstanceState)
+                /* binding.imageView.setOnClickListener{
              val imageDialog = AlertDialog.Builder(requireContext())
              imageDialog.setTitle("Select Action")
              val imageDialogItem = arrayOf("Select camera","Select gallery")
@@ -77,41 +86,50 @@ class AddItemFragment : Fragment() {
              imageDialog.show()
          }*/
 
-        binding.btnAddImage.setOnClickListener {
-            resultContent.launch("image/*")
-        }
-        binding.btnAdd.setOnClickListener {
-            val itemImage = imageUri.toString()
-             val name = binding.etName.text.toString()
-             val type = binding.etItemType.text.toString()
+                binding.btnAddImage.setOnClickListener {
+                    resultContent.launch("image/*")
+                    //pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+                    //captureImage()
 
-             val itemData = Data(itemImage, name, type)
-            //savePerson(itemData)
-
-            //pickImageFromGallery()
-            //cameraCheckPermissions()
-            //gallery()
-
-            viewModel.addItemToFirestore(itemData)
-
-            //Toast.makeText(requireContext(), "Saved data", Toast.LENGTH_LONG).show()
-            // gallery()
-
-            Log.e("TAG", "Data Added")
+                }
+                binding.btnAdd.setOnClickListener {
+                   // val itemImage = imageUri.toString()
+                    val name = binding.etName.text.toString()
+                    val type = binding.etItemType.text.toString()
 
 
-        }
+                    val itemData = Data(imageUri, name, type)
+                    //savePerson(itemData)
+
+                    //pickImageFromGallery()
+                    //cameraCheckPermissions()
+                    //gallery()
+
+                    viewModel.addItemToFirestore(itemData)
+
+                    //Toast.makeText(requireContext(), "Saved data", Toast.LENGTH_LONG).show()
+                    // gallery()
+
+                    Log.e("TAG", "Data Added")
 
 
-    }
+                }
 
 
+            }
 
-    /**
-     * old
-     */
+            private fun captureImage() {
+                // Open camera
 
-    /* private fun cameraCheckPermissions() {
+
+            }
+
+
+            /**
+             * old
+             */
+
+            /* private fun cameraCheckPermissions() {
          Dexter.withContext(requireContext()).withPermissions(
              android.Manifest.permission.READ_EXTERNAL_STORAGE,
              android.Manifest.permission.CAMERA
@@ -136,41 +154,51 @@ class AddItemFragment : Fragment() {
      }*/
 
 
-    // private fun camera() {
-    //   val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-    //   startActivityForResult(intent, CAMRE_REQUEST_CODE)
-    // }
-    private fun gallery() {
-        //resultContent.launch("image/*")
-        //binding.imageView.setImageURI(imageUri)
+            // private fun camera() {
+            //   val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+            //   startActivityForResult(intent, CAMRE_REQUEST_CODE)
+            // }
+            private fun gallery() {
+                //resultContent.launch("image/*")
+                //binding.imageView.setImageURI(imageUri)
 
-
-    }
-
-
-    private fun showRotationalDialogForPermissions() {
-        AlertDialog.Builder(requireContext()).setMessage("you have turend off permissions")
-            .setPositiveButton("Go to settings") { _, _ ->
-                try {
-                    val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-                    val uri = Uri.fromParts("package", requireActivity().packageName, null)
-                    intent.data = uri
-                    startActivity(intent)
-                } catch (e: ActivityNotFoundException) {
-                    e.printStackTrace()
-                }
 
             }
-            .setNegativeButton("CANCEL") { dialog, _ ->
-                dialog.dismiss()
-            }.show()
+    private val resultContent = registerForActivityResult(ActivityResultContracts.GetContent()) { result ->
+        result?.let { imageUri ->
+            // Display the selected image in an ImageView using Glide or any other library
+            Glide.with(this)
+                .load(imageUri)
+                .into(binding.imageView)
+
+            // Save the selected image URI in a property for later use
+            this.imageUri = imageUri
+        }
     }
 
-    private fun pickImageFromGallery() {
-        TODO("Not yet implemented")
-    }
+            private fun showRotationalDialogForPermissions() {
+                AlertDialog.Builder(requireContext()).setMessage("you have turend off permissions")
+                    .setPositiveButton("Go to settings") { _, _ ->
+                        try {
+                            val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                            val uri = Uri.fromParts("package", requireActivity().packageName, null)
+                            intent.data = uri
+                            startActivity(intent)
+                        } catch (e: ActivityNotFoundException) {
+                            e.printStackTrace()
+                        }
 
-    /*override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+                    }
+                    .setNegativeButton("CANCEL") { dialog, _ ->
+                        dialog.dismiss()
+                    }.show()
+            }
+
+            private fun pickImageFromGallery() {
+                TODO("Not yet implemented")
+            }
+
+            /*override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
         if (resultCode == Activity.RESULT_OK) {
@@ -202,5 +230,4 @@ class AddItemFragment : Fragment() {
         }
     }*/
 
-
-}
+        }
