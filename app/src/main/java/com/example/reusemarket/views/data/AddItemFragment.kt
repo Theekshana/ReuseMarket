@@ -9,13 +9,15 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
+import com.example.reusemarket.R
+import com.example.reusemarket.constants.hide
 import com.example.reusemarket.databinding.FragmentAddItemBinding
-import com.example.reusemarket.model.Data
 
 
 class AddItemFragment : Fragment() {
@@ -23,10 +25,6 @@ class AddItemFragment : Fragment() {
     private lateinit var binding: FragmentAddItemBinding
     private lateinit var viewModel: AddItemViewModel
     private var imageUri: Uri? = null
-
-    private val GALLERY_REQUEST_CODE = 1001
-    private val CAMERA_REQUEST_CODE = 1002
-
 
 
     // Get your image
@@ -64,6 +62,10 @@ class AddItemFragment : Fragment() {
 
                 viewModel = ViewModelProvider(requireActivity())[AddItemViewModel::class.java]
 
+                val categories = resources.getStringArray(R.array.categories)
+                val arrayAdapter = ArrayAdapter(requireContext(), R.layout.dropdown_item, categories)
+                binding.autoCompleteTextView.setAdapter(arrayAdapter)
+
 
 
 
@@ -86,26 +88,26 @@ class AddItemFragment : Fragment() {
              imageDialog.show()
          }*/
 
-                binding.btnAddImage.setOnClickListener {
+                binding.imageButton.setOnClickListener {
                     resultContent.launch("image/*")
                     //pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
                     //captureImage()
 
                 }
-                binding.btnAdd.setOnClickListener {
+                binding.btnAddItem.setOnClickListener {
                    // val itemImage = imageUri.toString()
-                    val name = binding.etName.text.toString()
-                    val type = binding.etItemType.text.toString()
+                    //val name = binding.etName.text.toString()
+                    //val type = binding.etItemType.text.toString()
 
 
-                    val itemData = Data(imageUri, name, type)
+                   // val itemData = Data(imageUri, name, type)
                     //savePerson(itemData)
 
                     //pickImageFromGallery()
                     //cameraCheckPermissions()
                     //gallery()
 
-                    viewModel.addItemToFirestore(itemData)
+                   // viewModel.addItemToFirestore(itemData)
 
                     //Toast.makeText(requireContext(), "Saved data", Toast.LENGTH_LONG).show()
                     // gallery()
@@ -169,14 +171,17 @@ class AddItemFragment : Fragment() {
             // Display the selected image in an ImageView using Glide or any other library
             Glide.with(this)
                 .load(imageUri)
-                .into(binding.imageView)
+                .into(binding.itemImageView)
+            binding.imageButton.visibility = View.GONE
 
             // Save the selected image URI in a property for later use
             this.imageUri = imageUri
         }
     }
 
-            private fun showRotationalDialogForPermissions() {
+
+
+    private fun showRotationalDialogForPermissions() {
                 AlertDialog.Builder(requireContext()).setMessage("you have turend off permissions")
                     .setPositiveButton("Go to settings") { _, _ ->
                         try {

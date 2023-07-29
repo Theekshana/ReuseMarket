@@ -10,5 +10,21 @@
     <string name="password">Password</string>
     <string name="Login">Login</string>
     <string name="Password">Password</string>
+    <string name="upload_image">upload_image</string>
+    <string name="location">Location</string>
+    <string name="description">Description</string>
+    <string name="furniture">Furniture</string>
+    <string name="item_name">Item Name</string>
+    <string name="save">SAVE</string>
+    <string name="todo">TODO</string>
+    <string name="phone_nubmer">Phone Nubmer</string>
+    <string name="Email">Email</string>
+    <string name="Location">Location</string>
+    <string name="hint">hint</string>
+
+    <string-array name="categories">
+        <item>Furniture</item>
+        <item>Electric</item>
+    </string-array>
 
 </resources>
