@@ -168,7 +168,7 @@ class LoginFragment : Fragment() {
     private fun checkAlreadyLoginUser() {
         if (viewModel.isAlreadyLoggedIn()) {
             //navigateToListFragment()
-            navigateToAddItemFragment()
+        navigateToAddItemFragment()
         }
 
     }
