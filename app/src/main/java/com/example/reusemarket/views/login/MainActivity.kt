@@ -1,34 +1,36 @@
 package com.example.reusemarket.views.login
 
 import android.app.Activity
-import android.content.ContentValues.TAG
+import android.content.ContentValues
+import android.content.Intent
 import android.content.IntentSender
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.ListFragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
+import androidx.navigation.findNavController
+import com.example.reusemarket.HomeActivity
 import com.example.reusemarket.R
 import com.example.reusemarket.constants.UIState
+import com.example.reusemarket.databinding.ActivityMainBinding
 import com.example.reusemarket.databinding.FragmentLoginBinding
 import com.google.android.gms.auth.api.identity.BeginSignInRequest
 import com.google.android.gms.auth.api.identity.Identity
 import com.google.android.gms.auth.api.identity.SignInClient
 import com.google.android.gms.common.api.ApiException
+import dagger.hilt.android.AndroidEntryPoint
 
-
-class LoginFragment : Fragment() {
-
-    private lateinit var binding: FragmentLoginBinding
+@AndroidEntryPoint
+class MainActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityMainBinding
     private lateinit var viewModel: AuthViewModel
     private var oneTapClient: SignInClient? = null
     private var signInRequest: BeginSignInRequest? = null
-
 
     private val myActivityResultLauncher =
         registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) { result ->
@@ -37,8 +39,8 @@ class LoginFragment : Fragment() {
                 try {
                     val credential = oneTapClient!!.getSignInCredentialFromIntent(result.data)
                     viewModel.signInWithGoogle(credential)
-                   // navigateToListFragment()
-                    navigateToAddItemFragment()
+                    // navigateToListFragment()
+                    //navigateToAddItemFragment()
                 } catch (e: ApiException) {
                     TODO("Exception handling")
                 }
@@ -47,31 +49,30 @@ class LoginFragment : Fragment() {
             }
         }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?,
-    ): View? {
-        // Inflate the layout for this fragment
-        binding = FragmentLoginBinding.inflate(inflater, container, false)
 
-        viewModel = ViewModelProvider(requireActivity())[AuthViewModel::class.java]
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 
-        /*binding.vm = viewModel
-        binding.lifecycleOwner = this*/
-        googleSignIn()
-
-        return binding.root
-
-
-    }
-
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+        viewModel = ViewModelProvider(this)[AuthViewModel::class.java]
+        binding.vm = viewModel
+        binding.lifecycleOwner = this
         checkAlreadyLoginUser()
         initUi()
 
+        googleSignIn()
+
+
     }
+
+    private fun checkAlreadyLoginUser() {
+        if (viewModel.isAlreadyLoggedIn()) {
+
+
+
+        }
+    }
+
 
     private fun initUi() {
         binding.btnLogin.setOnClickListener {
@@ -91,20 +92,21 @@ class LoginFragment : Fragment() {
             // Initiates the sign-up process
             viewModel.signUpResponse(email.toString(), password.toString())
 
-            viewModel.signUp.observe(viewLifecycleOwner) {
+            viewModel.signUp.observe(this) {
                 when (it) {
                     is UIState.Loading -> {
 
                     }
-
                     is UIState.Success<*> -> {
 
-                        //navigateToListFragment()
-                        navigateToAddItemFragment()
+                        val homeIntent = Intent(this@MainActivity, HomeActivity::class.java)
+                        startActivity(homeIntent)
+                        finish()
 
                     }
 
                     is UIState.Failure -> {
+
 
                     }
                 }
@@ -124,7 +126,7 @@ class LoginFragment : Fragment() {
 
 
                     } catch (e: IntentSender.SendIntentException) {
-                        Log.e(TAG, "Couldn't start One Tap UI: " + e.localizedMessage)
+                        Log.e(ContentValues.TAG, "Couldn't start One Tap UI: " + e.localizedMessage)
                     }
                 }
 
@@ -133,7 +135,7 @@ class LoginFragment : Fragment() {
     }
 
     private fun googleSignIn() {
-        oneTapClient = Identity.getSignInClient(requireContext())
+        oneTapClient = Identity.getSignInClient(this)
         signInRequest = BeginSignInRequest.builder()
             .setPasswordRequestOptions(
                 BeginSignInRequest.PasswordRequestOptions.builder()
@@ -154,24 +156,8 @@ class LoginFragment : Fragment() {
     }
 
 
-    /**
-     * Navigates to the List Fragment.
-     */
-    private fun navigateToListFragment() {
-        findNavController().navigate(R.id.action_loginFragment_to_listFragment)
-    }
-
-    private fun navigateToAddItemFragment() {
-        findNavController().navigate(R.id.action_loginFragment_to_addItemFragment)
-    }
-
-    private fun checkAlreadyLoginUser() {
-        if (viewModel.isAlreadyLoggedIn()) {
-            //navigateToListFragment()
-        navigateToAddItemFragment()
-        }
-
-    }
 }
+
+
 
 
