@@ -10,15 +10,11 @@ import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.ListFragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.findNavController
 import com.example.reusemarket.HomeActivity
 import com.example.reusemarket.R
 import com.example.reusemarket.constants.UIState
 import com.example.reusemarket.databinding.ActivityMainBinding
-import com.example.reusemarket.databinding.FragmentLoginBinding
 import com.google.android.gms.auth.api.identity.BeginSignInRequest
 import com.google.android.gms.auth.api.identity.Identity
 import com.google.android.gms.auth.api.identity.SignInClient
@@ -67,10 +63,16 @@ class MainActivity : AppCompatActivity() {
 
     private fun checkAlreadyLoginUser() {
         if (viewModel.isAlreadyLoggedIn()) {
-
+            navigateToHomeActivity()
 
 
         }
+    }
+
+    private fun navigateToHomeActivity() {
+        val homeIntent = Intent(this@MainActivity, HomeActivity::class.java)
+        startActivity(homeIntent)
+        finish()
     }
 
 
@@ -97,11 +99,10 @@ class MainActivity : AppCompatActivity() {
                     is UIState.Loading -> {
 
                     }
+
                     is UIState.Success<*> -> {
 
-                        val homeIntent = Intent(this@MainActivity, HomeActivity::class.java)
-                        startActivity(homeIntent)
-                        finish()
+                        navigateToHomeActivity()
 
                     }
 
