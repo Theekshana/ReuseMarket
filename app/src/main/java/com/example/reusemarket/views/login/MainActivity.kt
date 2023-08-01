@@ -53,7 +53,9 @@ class MainActivity : AppCompatActivity() {
         viewModel = ViewModelProvider(this)[AuthViewModel::class.java]
         binding.vm = viewModel
         binding.lifecycleOwner = this
+
         checkAlreadyLoginUser()
+
         initUi()
 
         googleSignIn()

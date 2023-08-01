@@ -16,11 +16,6 @@
             app:destination="@id/searchFragment" />
     </fragment>
     <fragment
-        android:id="@+id/addItemFragment"
-        android:name="com.example.reusemarket.views.data.AddItemFragment"
-        android:label="fragment_add_item"
-        tools:layout="@layout/fragment_add_item" />
-    <fragment
         android:id="@+id/userFragment"
         android:name="com.example.reusemarket.views.user.UserFragment"
         android:label="fragment_user"
@@ -34,4 +29,8 @@
         android:name="com.example.reusemarket.views.search.SearchFragment"
         android:label="fragment_search"
         tools:layout="@layout/fragment_search" />
+    <fragment
+        android:id="@+id/addItemFragment"
+        android:name="com.example.reusemarket.views.data.AddItemFragment"
+        android:label="AddItemFragment" />
 </navigation>

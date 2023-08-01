@@ -39,6 +39,7 @@ class ListFragment : Fragment() {
         binding.button.setOnClickListener {
             viewModel.signOut()
 
+
         }
 
 
