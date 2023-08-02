@@ -18,6 +18,7 @@ class UserFragment : Fragment() {
 
 
     lateinit var binding: FragmentUserBinding
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
@@ -26,6 +27,8 @@ class UserFragment : Fragment() {
         //return inflater.inflate(R.layout.fragment_user, container, false)
 
         binding = FragmentUserBinding.inflate(inflater, container, false)
+
+
 
 // create list of RecyclerViewData
         var recyclerViewData = listOf<UserItem>()
@@ -65,6 +68,8 @@ class UserFragment : Fragment() {
 
         return binding.root
     }
+
+
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
