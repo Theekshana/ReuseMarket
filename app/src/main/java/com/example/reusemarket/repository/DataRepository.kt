@@ -7,7 +7,7 @@ import com.google.android.gms.tasks.Task
 
 interface DataRepository {
 
-    suspend fun addDataToItemData(data: Data): Result<UIState>
+    suspend fun addDataToItemData(data: Data): Result<Unit>
 
 
 

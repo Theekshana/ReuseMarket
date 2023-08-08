@@ -61,7 +61,7 @@
             tools:ignore="ImageContrastCheck" />
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/textInputLayout"
+            android:id="@+id/txtItemName"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_start"
@@ -72,6 +72,7 @@
             app:layout_constraintTop_toBottomOf="@+id/itemImageView">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etItemName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/item_name"
@@ -89,7 +90,7 @@
             android:layout_marginEnd="@dimen/margin_end"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textInputLayout">
+            app:layout_constraintTop_toBottomOf="@+id/txtItemName">
 
             <AutoCompleteTextView
                 android:id="@+id/autoCompleteTextView"

@@ -1,7 +1,5 @@
 package com.example.reusemarket.views.data
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.reusemarket.model.Data
@@ -12,14 +10,12 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AddItemViewModel @Inject constructor(
-    private val repository: DataRepositoryImpl
-    ): ViewModel() {
+    private val repository: DataRepositoryImpl,
+) : ViewModel() {
 
-    private val _addItemResult = MutableLiveData<String>()
-    val addItemResult: LiveData<String>
-        get() = _addItemResult
 
-    fun addItemToFirestore(data: Data){
+    fun addItemToFirestore(data: Data) {
+        //val category = selectedCategory.value ?: ""
         viewModelScope.launch {
 
             repository.addDataToItemData(data)
@@ -27,9 +23,6 @@ class AddItemViewModel @Inject constructor(
 
         }
     }
-
-
-
 
 
 }

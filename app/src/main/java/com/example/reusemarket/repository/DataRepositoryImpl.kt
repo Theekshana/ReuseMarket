@@ -1,13 +1,9 @@
 package com.example.reusemarket.repository
 
-import android.net.Uri
-import com.example.reusemarket.constants.UIState
 import com.example.reusemarket.model.Data
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.tasks.await
-import kotlinx.coroutines.withContext
 import java.util.UUID
 import javax.inject.Inject
 
@@ -19,56 +15,36 @@ class DataRepositoryImpl @Inject constructor(
 
     private val itemData = firestore.collection("items")
     private val imageRef = firebaseStorage.reference.child("images")
-    override suspend fun addDataToItemData(data: Data): Result<UIState> {
+    override suspend fun addDataToItemData(data: Data): Result<Unit> {
         val imageUri = data.itemImage
         val name = data.name
-        val type = data.type
+        val category = data.category
 
-        if (imageUri != null) {
+        return try {
+            if (imageUri == null) {
+                throw IllegalArgumentException(("No image URI provided"))
+            }
             val imageFileName = "${System.currentTimeMillis()}_${UUID.randomUUID()}.jpg"
             val imageStorageRef = imageRef.child(imageFileName)
 
-            try {
-                val uploadTask = imageStorageRef.putFile(imageUri).await()
-                val downloadUrl = uploadTask.storage.downloadUrl.await()
-                // Save the download URL and name in Firestore
-                val newItem = hashMapOf(
-                    "image_url" to downloadUrl.toString(),
-                    "name" to name,
-                "type" to type
-                )
-                itemData.add(newItem).await()
 
-                // Save the download URL in Firestore
-                // Implement your Firestore saving logic here
+            val uploadTask = imageStorageRef.putFile(imageUri).await()
+            val downloadUrl = uploadTask.storage.downloadUrl.await()
+            // Save the download URL and name in Firestore
+            //furniture item
+            val furnitureItem = hashMapOf(
+                "image_url" to downloadUrl.toString(),
+                "name" to name,
+                "category" to category
 
-
-            } catch (e: Exception) {
-
-            }
-        }
-
-
-        // val document = database.collection(FirestoreTables.NOTE).document()
-        /*override suspend fun addDataToItemData(data: Data): Result<UIState> {
-        return withContext(Dispatchers.IO) {
-            runCatching {
-
-                val imageUri = data.itemImage
-                val name = data.name
-                val type = data.type
-                //itemData.add(data).await()
-
-
-
-
-            }.fold(
-                onSuccess = { Result.success(UIState.Success("Data Added")) },
-                onFailure = { Result.failure(it) }
             )
+            itemData.add(furnitureItem).await()
+            Result.success(Unit)
+
+        } catch (e: Exception) {
+            Result.failure(e)
         }
-    }*/
-        return TODO("Provide the return value")
+
     }
 }
 
