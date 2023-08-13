@@ -1,5 +1,7 @@
 package com.example.reusemarket.views.data
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.reusemarket.model.Data
@@ -13,15 +15,36 @@ class AddItemViewModel @Inject constructor(
     private val repository: DataRepositoryImpl,
 ) : ViewModel() {
 
+    private val _loadingState = MutableLiveData<Boolean>()
+    val loadingState: LiveData<Boolean>
+        get() = _loadingState
+
+    private val _toastMessage = MutableLiveData<String?>()
+    val toastMessage: LiveData<String?>
+        get() = _toastMessage
 
     fun addItemToFirestore(data: Data) {
-        //val category = selectedCategory.value ?: ""
+        _loadingState.value = true
         viewModelScope.launch {
 
-            repository.addDataToItemData(data)
+            val response = repository.addDataToItemData(data)
+            _loadingState.value = false
+
+            if(response.isSuccess){
+                _toastMessage.value = "Data added successfully!"
+
+            }else{
+
+                _toastMessage.value = "Error adding data!"
+
+            }
 
 
         }
+    }
+
+    fun clearToastMessage() {
+        _toastMessage.value = null
     }
 
 

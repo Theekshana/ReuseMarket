@@ -10,7 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
-import android.widget.AutoCompleteTextView
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
@@ -27,7 +27,7 @@ class AddItemFragment : Fragment() {
     private lateinit var viewModel: AddItemViewModel
     private var imageUri: Uri? = null
 
-   private lateinit var selectedCategory: String
+    private var selectedCategory: String = ""
 
 
     // Get your image
@@ -65,9 +65,12 @@ if (uri != null) {
 
         viewModel = ViewModelProvider(requireActivity())[AddItemViewModel::class.java]
 
-
-
-
+        viewModel.toastMessage.observe(viewLifecycleOwner) { message ->
+            message?.let {
+                Toast.makeText(requireContext(), it, Toast.LENGTH_LONG).show()
+                viewModel.clearToastMessage()
+            }
+        }
 
 
         return binding.root
@@ -92,7 +95,7 @@ if (uri != null) {
 
         val arrayAdapter = ArrayAdapter(requireContext(), R.layout.dropdown_item, categories)
 
-       // val autocompleteTV = findViewById<AutoCompleteTextView>(R.id.autoCompleteTextView)
+        // val autocompleteTV = findViewById<AutoCompleteTextView>(R.id.autoCompleteTextView)
 
         binding.autoCompleteTextView.setAdapter(arrayAdapter)
 
@@ -114,7 +117,6 @@ if (uri != null) {
             //val type = binding.etItemType.text.toString()
 
 
-
             val itemData = Data(imageUri, name, selectedCategory)
             //savePerson(itemData)
 
@@ -123,6 +125,7 @@ if (uri != null) {
             //gallery()
 
             viewModel.addItemToFirestore(itemData)
+
 
             //Toast.makeText(requireContext(), "Saved data", Toast.LENGTH_LONG).show()
             // gallery()

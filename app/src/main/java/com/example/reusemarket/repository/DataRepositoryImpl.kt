@@ -27,7 +27,6 @@ class DataRepositoryImpl @Inject constructor(
             val imageFileName = "${System.currentTimeMillis()}_${UUID.randomUUID()}.jpg"
             val imageStorageRef = imageRef.child(imageFileName)
 
-
             val uploadTask = imageStorageRef.putFile(imageUri).await()
             val downloadUrl = uploadTask.storage.downloadUrl.await()
             // Save the download URL and name in Firestore
@@ -36,7 +35,6 @@ class DataRepositoryImpl @Inject constructor(
                 "image_url" to downloadUrl.toString(),
                 "name" to name,
                 "category" to category
-
             )
             itemData.add(furnitureItem).await()
             Result.success(Unit)
