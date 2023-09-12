@@ -1,15 +1,20 @@
 package com.example.reusemarket.repository
 
+import com.example.reusemarket.model.AllItem
 import com.example.reusemarket.model.Data
+import com.google.android.gms.tasks.Task
+import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.QuerySnapshot
+import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.tasks.await
 import java.util.UUID
 import javax.inject.Inject
 
 class DataRepositoryImpl @Inject constructor(
-    firestore: FirebaseFirestore,
-    firebaseStorage: FirebaseStorage,
+    private val firestore: FirebaseFirestore,
+    private val firebaseStorage: FirebaseStorage,
 
     ) : DataRepository {
 
@@ -44,6 +49,23 @@ class DataRepositoryImpl @Inject constructor(
         }
 
     }
+
+    override fun fetchAllItems(): Task<QuerySnapshot> {
+        return itemData.get()
+    }
+
+
+    /*override suspend fun fetchDataFromDatabase(data: Data): Result<List<AllItem>> {
+        return try {
+            val querySnapshot = firestore.collection("items").get().await()
+            val dataList = querySnapshot.documents.mapNotNull { document ->
+                document.toObject(AllItem::class.java)
+            }
+            Result.success(dataList)
+        }catch (e: Exception){
+            Result.failure(e)
+        }
+    }*/
 }
 
 

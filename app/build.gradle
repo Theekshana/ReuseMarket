@@ -108,6 +108,9 @@ dependencies {
     //floating action button
     implementation 'com.google.android.material:material:1.4.0'
 
+    //picasso
+    implementation 'com.squareup.picasso:picasso:2.8'
+
 
 
 

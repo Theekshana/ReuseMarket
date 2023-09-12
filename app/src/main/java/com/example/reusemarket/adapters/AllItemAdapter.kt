@@ -2,13 +2,15 @@ package com.example.reusemarket.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.reusemarket.R
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.example.reusemarket.databinding.AllItemBinding
 import com.example.reusemarket.model.AllItem
+import com.example.reusemarket.model.Data
+import com.example.reusemarket.model.User
 
-class AllItemAdapter(private var allItem: List<AllItem>) :
+class AllItemAdapter(private val AllItemList: ArrayList<AllItem>) :
     RecyclerView.Adapter<AllItemAdapter.AllItemViewHolder>() {
 
 
@@ -23,20 +25,24 @@ class AllItemAdapter(private var allItem: List<AllItem>) :
         return AllItemViewHolder(itemView)
     }
 
-    override fun getItemCount(): Int {
-        return allItem.size
-    }
+    override fun getItemCount(): Int = AllItemList.size
 
     override fun onBindViewHolder(holder: AllItemViewHolder, position: Int) {
-        val currentItem: AllItem = allItem[position]
+        //val currentItem: AllItem = allItem[position]
+        val currentItem: AllItem = AllItemList[position]
 
-        val tvNumber: TextView = holder.itemView.findViewById(R.id.itemName)
-        tvNumber.text = currentItem.text1
+        holder.binding.itemName.text = currentItem.name
+        holder.binding.txtLocation.text = currentItem.category
+        currentItem.image_url?.let { imageUrl ->
+            val imageUriString = imageUrl.toString()
+                Glide.with(holder.itemView)
+                .load(imageUriString)
+                .into(holder.binding.itemImage)
 
-        val location: TextView = holder.itemView.findViewById(R.id.txtLocation)
-        location.text = currentItem.text2
+        }
+
 
     }
-
-
 }
+
+
