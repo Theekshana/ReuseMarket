@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.reusemarket.model.AllItem
-import com.example.reusemarket.model.Data
+import com.example.reusemarket.repository.AuthRepositoryImpl
 import com.example.reusemarket.repository.DataRepositoryImpl
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -14,6 +14,7 @@ import javax.inject.Inject
 @HiltViewModel
 class AddItemViewModel @Inject constructor(
     private val repository: DataRepositoryImpl,
+    private val repositoryAuth: AuthRepositoryImpl,
 ) : ViewModel() {
 
     private val _loadingState = MutableLiveData<Boolean>()
@@ -26,21 +27,37 @@ class AddItemViewModel @Inject constructor(
 
     fun addItemToFirestore(allItem: AllItem) {
         _loadingState.value = true
+        allItem.email = repositoryAuth.getCurrentUser()?.email ?: ""
         viewModelScope.launch {
 
             val response = repository.addDataToItemData(allItem)
             _loadingState.value = false
 
-            if(response.isSuccess){
+            if (response.isSuccess) {
                 _toastMessage.value = "Data added successfully!"
 
-            }else{
+            } else {
 
                 _toastMessage.value = "Error adding data!"
 
             }
 
 
+        }
+    }
+
+    fun updateItemData(allItem: AllItem) {
+        _loadingState.value = true
+        allItem.email = repositoryAuth.getCurrentUser()?.email ?: ""
+        viewModelScope.launch {
+            val response = repository.updateItemData(allItem)
+            _loadingState.value = false
+
+            if (response.isSuccess) {
+                _toastMessage.value = "Data added successfully!"
+            } else {
+                _toastMessage.value = "Error adding data!"
+            }
         }
     }
 

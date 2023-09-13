@@ -41,7 +41,7 @@ class UserViewModel @Inject constructor(
                     _dataListState.postValue(UIState.Success<List<AllItem>>(userList))
 
                 }.addOnFailureListener {
-                    _dataListState.postValue(UIState.Failure("Failed getting data"))
+                    _dataListState.postValue(UIState.Failure("Failed getting data" ))
                 }
             }
 
@@ -50,25 +50,5 @@ class UserViewModel @Inject constructor(
 
     }
 
-    fun fetchAllItems() {
 
-        viewModelScope.launch {
-            _dataListState.postValue(UIState.Loading)
-            repository.fetchAllItems().addOnSuccessListener { it ->
-                val userList = ArrayList<AllItem>()
-                for (data in it.documents) {
-                    val item: AllItem? = data.toObject(AllItem::class.java)
-                    item?.let { userList.add(it) }
-                }
-                marketItemList.postValue(userList)
-                _dataListState.postValue(UIState.Success<List<AllItem>>(userList))
-
-            }.addOnFailureListener {
-                _dataListState.postValue(UIState.Failure("Failed getting data"))
-            }
-
-        }
-
-
-    }
 }

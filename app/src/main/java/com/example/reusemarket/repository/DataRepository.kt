@@ -8,6 +8,8 @@ interface DataRepository {
 
     suspend fun addDataToItemData(allItem: AllItem): Result<Unit>
 
+    suspend fun updateItemData(allItem: AllItem): Result<Unit>
+
     fun fetchAllItems() : Task<QuerySnapshot>
 
     fun fetchAllItemsForEmail(email : String): Task<QuerySnapshot>

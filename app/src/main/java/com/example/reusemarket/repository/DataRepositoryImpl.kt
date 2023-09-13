@@ -1,20 +1,17 @@
 package com.example.reusemarket.repository
 
 import com.example.reusemarket.model.AllItem
-import com.example.reusemarket.model.Data
 import com.google.android.gms.tasks.Task
-import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
-import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.tasks.await
 import java.util.UUID
 import javax.inject.Inject
 
 class DataRepositoryImpl @Inject constructor(
-    private val firestore: FirebaseFirestore,
-    private val firebaseStorage: FirebaseStorage,
+     firestore: FirebaseFirestore,
+     firebaseStorage: FirebaseStorage,
 
     ) : DataRepository {
 
@@ -41,8 +38,9 @@ class DataRepositoryImpl @Inject constructor(
                 "image_url" to downloadUrl.toString(),
                 "name" to name,
                 "category" to category,
+                "email" to allItem.email
 
-            )
+                )
             itemData.add(furnitureItem).await()
             Result.success(Unit)
 
@@ -50,6 +48,38 @@ class DataRepositoryImpl @Inject constructor(
             Result.failure(e)
         }
 
+    }
+
+    override suspend fun updateItemData(allItem: AllItem): Result<Unit> {
+        val imageUri = allItem.itemImage
+        val name = allItem.name
+        val category = allItem.category
+
+        return try {
+
+            var downloadUrl = allItem.image_url.orEmpty()
+            if (imageUri != null) {
+                val imageFileName = "${System.currentTimeMillis()}_${UUID.randomUUID()}.jpg"
+                val imageStorageRef = imageRef.child(imageFileName)
+
+                val uploadTask = imageStorageRef.putFile(imageUri).await()
+                downloadUrl = uploadTask.storage.downloadUrl.await().toString()
+            }
+
+
+            val furnitureItem = mapOf(
+                "imageUrl" to downloadUrl,
+                "name" to name,
+                "category" to category,
+                "email" to allItem.email
+
+            )
+            allItem.itemId?.let { itemData.document(it).update(furnitureItem).await() }
+            Result.success(Unit)
+
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
     }
 
     override fun fetchAllItems(): Task<QuerySnapshot> {
@@ -61,17 +91,6 @@ class DataRepositoryImpl @Inject constructor(
     }
 
 
-    /*override suspend fun fetchDataFromDatabase(data: Data): Result<List<AllItem>> {
-        return try {
-            val querySnapshot = firestore.collection("items").get().await()
-            val dataList = querySnapshot.documents.mapNotNull { document ->
-                document.toObject(AllItem::class.java)
-            }
-            Result.success(dataList)
-        }catch (e: Exception){
-            Result.failure(e)
-        }
-    }*/
 }
 
 

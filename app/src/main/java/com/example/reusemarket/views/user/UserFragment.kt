@@ -115,7 +115,7 @@ class UserFragment : Fragment() {
                 }
 
                 is UIState.Success<*> -> {
-                    //binding.progressBar.hide()
+
                     Toast.makeText(
                         requireContext(),
                         "Number of documents retrieved: ${viewModel.marketItemList.value?.size}",
@@ -129,7 +129,7 @@ class UserFragment : Fragment() {
                 }
             }
         }
-        //viewModel.fetchAllItems()
+
         viewModel.fetchPostedItems()
 
 
@@ -141,36 +141,10 @@ class UserFragment : Fragment() {
 
         }
 
-        //registerForListState()
 
-        //viewModel.fetchPostedItems()
 
     }
 
-    /*private fun registerForListState() {
-        viewModel.dateListState.observe(viewLifecycleOwner) {
-            when (it) {
-                is UIState.Failure -> {
-                    //binding.progressBar.hide()
-                    Toast.makeText(requireContext(), it.toString(), Toast.LENGTH_LONG).show()
-                }
-
-                UIState.Loading -> {
-                   // binding.progressBar.show()
-                }
-
-                is UIState.Success<*> -> {
-                  //  binding.progressBar.hide()
-                    val myRecyclerViewAdapter =
-                        UserItemAdapter((viewModel.marketItemList.value ?: emptyList()) as ArrayList<AllItem>)
-
-                    binding.rvUserItem.adapter = myRecyclerViewAdapter
-                }
-            }
-        }
-        //viewModel.fetchAllItems()
-        viewModel.fetchPostedItems()
-    }*/
 
     private fun navigateToAddItemFragment() {
         val destinationFragment = AddItemFragment()

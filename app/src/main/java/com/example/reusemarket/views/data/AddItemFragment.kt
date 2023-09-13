@@ -19,7 +19,6 @@ import com.bumptech.glide.Glide
 import com.example.reusemarket.R
 import com.example.reusemarket.databinding.FragmentAddItemBinding
 import com.example.reusemarket.model.AllItem
-import com.example.reusemarket.model.Data
 
 
 class AddItemFragment : Fragment() {
@@ -98,7 +97,6 @@ if (uri != null) {
 
         val arrayAdapter = ArrayAdapter(requireContext(), R.layout.dropdown_item, categories)
 
-        // val autocompleteTV = findViewById<AutoCompleteTextView>(R.id.autoCompleteTextView)
 
         binding.autoCompleteTextView.setAdapter(arrayAdapter)
 
@@ -128,13 +126,19 @@ if (uri != null) {
 
 
             )
+
+            if (item.itemId.isNullOrEmpty()) {
+                viewModel.addItemToFirestore(itemMarketItem)
+            } else {
+                viewModel.updateItemData(itemMarketItem)
+            }
             //savePerson(itemData)
 
             //pickImageFromGallery()
             //cameraCheckPermissions()
             //gallery()
 
-            viewModel.addItemToFirestore(itemMarketItem)
+            //viewModel.addItemToFirestore(itemMarketItem)
 
 
             //Toast.makeText(requireContext(), "Saved data", Toast.LENGTH_LONG).show()
