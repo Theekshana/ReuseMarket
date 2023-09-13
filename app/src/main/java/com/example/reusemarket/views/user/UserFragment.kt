@@ -5,13 +5,17 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.reusemarket.R
+import com.example.reusemarket.adapters.AllItemAdapter
 import com.example.reusemarket.adapters.UserItemAdapter
+import com.example.reusemarket.constants.UIState
 import com.example.reusemarket.databinding.FragmentUserBinding
-import com.example.reusemarket.model.UserItem
+import com.example.reusemarket.model.AllItem
 import com.example.reusemarket.views.data.AddItemFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -19,7 +23,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class UserFragment : Fragment() {
 
-
+    private lateinit var viewModel: UserViewModel
     lateinit var binding: FragmentUserBinding
     private var isBottomNavigationVisible = true
     private lateinit var fabButton: FloatingActionButton
@@ -32,6 +36,8 @@ class UserFragment : Fragment() {
         // Inflate the layout for this fragment
         //return inflater.inflate(R.layout.fragment_user, container, false)
 
+        // Inflate the layout for this fragment
+        viewModel = ViewModelProvider(requireActivity())[UserViewModel::class.java]
         binding = FragmentUserBinding.inflate(inflater, container, false)
 
         fabButton = binding.btnAdd
@@ -41,43 +47,11 @@ class UserFragment : Fragment() {
         setupScrollListener()
         showOrHideFabButton()
 
-
-
-// create list of RecyclerViewData
-        var recyclerViewData = listOf<UserItem>()
-        recyclerViewData = recyclerViewData + UserItem("Hello")
-        recyclerViewData = recyclerViewData + UserItem("Hello")
-        recyclerViewData = recyclerViewData + UserItem("Hello")
-        recyclerViewData = recyclerViewData + UserItem("Hello")
-        recyclerViewData = recyclerViewData + UserItem("Hello")
-        recyclerViewData = recyclerViewData + UserItem("Hello")
-
         // create a vertical layout manager
         val layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
 
-        // create instance of MyRecyclerViewAdapter
-        val myRecyclerViewAdapter = UserItemAdapter(recyclerViewData)
-
-        // attach the adapter to the recycler view
-        binding.rvUserItem.adapter = myRecyclerViewAdapter
-
-        // also attach the layout manager
         binding.rvUserItem.layoutManager = layoutManager
-
-        // make the adapter the data set changed for the recycler view
-        myRecyclerViewAdapter.notifyDataSetChanged()
-
-
-        /* val grade = listOf("A", "B", "C", "D", "E", "D", "F")
-
-         val adapter = UserItemAdapter(grade)
-         binding.rvUserItem.layoutManager = LinearLayoutManager(requireContext())
-         binding.rvUserItem.setHasFixedSize(true)
-         binding.rvUserItem.adapter = adapter*/
-
-
-
 
         return binding.root
     }
@@ -129,6 +103,36 @@ class UserFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
 
+        viewModel.dateListState.observe(viewLifecycleOwner) {
+            when (it) {
+                is UIState.Failure -> {
+
+                    Toast.makeText(requireContext(), it.toString(), Toast.LENGTH_LONG).show()
+                }
+
+                UIState.Loading -> {
+
+                }
+
+                is UIState.Success<*> -> {
+
+                    Toast.makeText(
+                        requireContext(),
+                        "Number of documents retrieved: ${viewModel.marketItemList.value?.size}",
+                        Toast.LENGTH_LONG
+                    ).show()
+                    val myRecyclerViewAdapter =
+                        UserItemAdapter(
+                            (viewModel.marketItemList.value ?: emptyList()) as ArrayList<AllItem>
+                        )
+                    binding.rvUserItem.adapter = myRecyclerViewAdapter
+                }
+            }
+        }
+
+        viewModel.fetchPostedItems()
+
+
         binding.btnAdd.setOnClickListener {
             Log.d("MyFragment", "onViewCreated() called")
 
@@ -138,7 +142,9 @@ class UserFragment : Fragment() {
         }
 
 
+
     }
+
 
     private fun navigateToAddItemFragment() {
         val destinationFragment = AddItemFragment()

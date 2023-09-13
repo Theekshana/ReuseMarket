@@ -17,8 +17,10 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.example.reusemarket.R
+import com.example.reusemarket.constants.gone
+import com.example.reusemarket.constants.show
 import com.example.reusemarket.databinding.FragmentAddItemBinding
-import com.example.reusemarket.model.Data
+import com.example.reusemarket.model.AllItem
 
 
 class AddItemFragment : Fragment() {
@@ -29,32 +31,8 @@ class AddItemFragment : Fragment() {
 
     private var selectedCategory: String = ""
 
+    private var item = AllItem()
 
-    // Get your image
-
-    // private var personalCollectionRef = Firebase.firestore.collection("items")
-
-    /*  val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
-// Callback is invoked after the user selects a media item or closes the
-// photo picker.
-if (uri != null) {
-    Log.d("PhotoPicker", "Selected URI: $uri")
-} else {
-    Log.d("PhotoPicker", "No media selected")
-}
-}*/
-
-    /* private val resultContent =
- registerForActivityResult(ActivityResultContracts.GetContent()) { result ->
-     //binding.imageView.setImageURI(result)
-     imageUri = result
-
-//Load image
-     Glide.with(this)
-         .load(imageUri)
-         .into(binding.imageView)
-
- }*/
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -78,24 +56,26 @@ if (uri != null) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        /* binding.imageView.setOnClickListener{
-     val imageDialog = AlertDialog.Builder(requireContext())
-     imageDialog.setTitle("Select Action")
-     val imageDialogItem = arrayOf("Select camera","Select gallery")
-     imageDialog.setItems(imageDialogItem){dialog, which ->
-         when(which){
-             0 -> camera()
-             1 -> gallery()
-         }
-     }
 
-     imageDialog.show()
- }*/
+        viewModel.loadingState.observeForever {
+
+            if (it) {
+                disableEnableControls(false, binding.addItemLayout)
+                binding.btnAddItem.isEnabled = false
+                binding.progressBar.show()
+            } else {
+                disableEnableControls(true, binding.addItemLayout)
+                binding.btnAddItem.isEnabled = true
+                binding.progressBar.gone()
+
+            }
+
+        }
+
         val categories = resources.getStringArray(R.array.categories)
 
         val arrayAdapter = ArrayAdapter(requireContext(), R.layout.dropdown_item, categories)
 
-        // val autocompleteTV = findViewById<AutoCompleteTextView>(R.id.autoCompleteTextView)
 
         binding.autoCompleteTextView.setAdapter(arrayAdapter)
 
@@ -112,75 +92,41 @@ if (uri != null) {
 
         }
         binding.btnAddItem.setOnClickListener {
-            // val itemImage = imageUri.toString()
+
             val name = binding.etItemName.text.toString()
-            //val type = binding.etItemType.text.toString()
 
+            val itemMarketItem = item.copy(
+                itemImage = imageUri,
+                name = name,
+                category = selectedCategory
 
-            val itemData = Data(imageUri, name, selectedCategory)
-            //savePerson(itemData)
+            )
 
-            //pickImageFromGallery()
-            //cameraCheckPermissions()
-            //gallery()
-
-            viewModel.addItemToFirestore(itemData)
-
-
-            //Toast.makeText(requireContext(), "Saved data", Toast.LENGTH_LONG).show()
-            // gallery()
+            if (item.itemId.isNullOrEmpty()) {
+                viewModel.addItemToFirestore(itemMarketItem)
+            } else {
+                viewModel.updateItemData(itemMarketItem)
+            }
 
             Log.e("TAG", "Data Added")
-
-
+            
         }
 
 
     }
 
-    private fun captureImage() {
-        // Open camera
-
-
+    private fun disableEnableControls(enable: Boolean, vg: ViewGroup) {
+        for (i in 0 until vg.childCount) {
+            val child = vg.getChildAt(i)
+            child.isEnabled = enable
+            if (child is ViewGroup) {
+                disableEnableControls(enable, child)
+            }
+        }
     }
 
-
-    /**
-     * old
-     */
-
-    /* private fun cameraCheckPermissions() {
- Dexter.withContext(requireContext()).withPermissions(
-     android.Manifest.permission.READ_EXTERNAL_STORAGE,
-     android.Manifest.permission.CAMERA
- ).withListener(
-
-     object : MultiplePermissionsListener {
-         override fun onPermissionsChecked(report: MultiplePermissionsReport?) {
-             camera()
-         }
-
-         override fun onPermissionRationaleShouldBeShown(
-             p0: MutableList<com.karumi.dexter.listener.PermissionRequest>?,
-             p1: PermissionToken?,
-
-             ) {
-             showRotationalDialogForPermissions()
-         }
-
-     }
-
- ).onSameThread().check()
-}*/
-
-
-    // private fun camera() {
-    //   val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-    //   startActivityForResult(intent, CAMRE_REQUEST_CODE)
-    // }
-    private fun gallery() {
-        //resultContent.launch("image/*")
-        //binding.imageView.setImageURI(imageUri)
+    private fun captureImage() {
+        // Open camera
 
 
     }
@@ -218,40 +164,5 @@ if (uri != null) {
             }.show()
     }
 
-    private fun pickImageFromGallery() {
-        TODO("Not yet implemented")
-    }
-
-    /*override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-super.onActivityResult(requestCode, resultCode, data)
-
-if (resultCode == Activity.RESULT_OK) {
-    when (requestCode) {
-        CAMRE_REQUEST_CODE -> {
-
-            val bitmap = data?.extras?.get("data") as Bitmap
-
-
-            //coil image loader
-            binding.imageView.load(bitmap) {
-                crossfade(true)
-                crossfade(1000)
-                transformations(CircleCropTransformation())
-            }
-        }
-
-        GALLERY_REQUEST_CODE -> {
-            binding.imageView.load(data?.data) {
-                crossfade(true)
-                crossfade(1000)
-                transformations(CircleCropTransformation())
-            }
-
-
-        }
-
-    }
-}
-}*/
 
 }

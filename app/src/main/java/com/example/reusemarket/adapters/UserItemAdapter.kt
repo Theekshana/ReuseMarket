@@ -2,22 +2,20 @@ package com.example.reusemarket.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.reusemarket.R
+import com.bumptech.glide.Glide
 import com.example.reusemarket.databinding.UserItemListBinding
-import com.example.reusemarket.model.UserItem
-import com.example.reusemarket.views.data.AddItemFragment
+import com.example.reusemarket.model.AllItem
 
 class UserItemAdapter(
-    private var userItem: List<UserItem>,
+    private var userItems: List<AllItem>,
 ) : RecyclerView.Adapter<UserItemAdapter.UserItemViewHolder>() {
 
+
+
+
     inner class UserItemViewHolder(val binding: UserItemListBinding) :
-        RecyclerView.ViewHolder(binding.root) {
-
-
-    }
+        RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserItemViewHolder {
 
@@ -28,17 +26,19 @@ class UserItemAdapter(
     }
 
     override fun getItemCount(): Int {
-        return userItem.size
+        return userItems.size
     }
 
     override fun onBindViewHolder(holder: UserItemViewHolder, position: Int) {
+        val currentItem: AllItem = userItems[position]
+        holder.binding.itemName.text = currentItem.name
 
-        // holder.textView.text = userItem[position]
-        val currentItem: UserItem = userItem[position]
+        currentItem.image_url?.let { imageUrl ->
+            Glide.with(holder.itemView)
+                .load(imageUrl)
+                .into(holder.binding.itemImage)
 
-        val tvNumber: TextView = holder.itemView.findViewById(R.id.itemName)
-
-        tvNumber.text = currentItem.text1
+        }
 
 
     }
