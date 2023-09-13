@@ -18,6 +18,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.example.reusemarket.R
 import com.example.reusemarket.databinding.FragmentAddItemBinding
+import com.example.reusemarket.model.AllItem
 import com.example.reusemarket.model.Data
 
 
@@ -28,6 +29,8 @@ class AddItemFragment : Fragment() {
     private var imageUri: Uri? = null
 
     private var selectedCategory: String = ""
+
+    private var item = AllItem()
 
 
     // Get your image
@@ -117,14 +120,21 @@ if (uri != null) {
             //val type = binding.etItemType.text.toString()
 
 
-            val itemData = Data(imageUri, name, selectedCategory)
+            //val itemData = AllItem(imageUri, name, selectedCategory)
+            val itemMarketItem = item.copy(
+                itemImage = imageUri,
+                name = name,
+                category = selectedCategory
+
+
+            )
             //savePerson(itemData)
 
             //pickImageFromGallery()
             //cameraCheckPermissions()
             //gallery()
 
-            viewModel.addItemToFirestore(itemData)
+            viewModel.addItemToFirestore(itemMarketItem)
 
 
             //Toast.makeText(requireContext(), "Saved data", Toast.LENGTH_LONG).show()

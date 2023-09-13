@@ -4,11 +4,8 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.example.reusemarket.databinding.AllItemBinding
 import com.example.reusemarket.model.AllItem
-import com.example.reusemarket.model.Data
-import com.example.reusemarket.model.User
 
 class AllItemAdapter(private val AllItemList: ArrayList<AllItem>) :
     RecyclerView.Adapter<AllItemAdapter.AllItemViewHolder>() {

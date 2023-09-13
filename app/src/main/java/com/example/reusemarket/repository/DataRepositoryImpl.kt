@@ -20,10 +20,11 @@ class DataRepositoryImpl @Inject constructor(
 
     private val itemData = firestore.collection("items")
     private val imageRef = firebaseStorage.reference.child("images")
-    override suspend fun addDataToItemData(data: Data): Result<Unit> {
-        val imageUri = data.itemImage
-        val name = data.name
-        val category = data.category
+    override suspend fun addDataToItemData(allItem: AllItem): Result<Unit> {
+        val imageUri = allItem.itemImage
+        val name = allItem.name
+        val category = allItem.category
+
 
         return try {
             if (imageUri == null) {
@@ -39,7 +40,8 @@ class DataRepositoryImpl @Inject constructor(
             val furnitureItem = hashMapOf(
                 "image_url" to downloadUrl.toString(),
                 "name" to name,
-                "category" to category
+                "category" to category,
+
             )
             itemData.add(furnitureItem).await()
             Result.success(Unit)
@@ -52,6 +54,10 @@ class DataRepositoryImpl @Inject constructor(
 
     override fun fetchAllItems(): Task<QuerySnapshot> {
         return itemData.get()
+    }
+
+    override fun fetchAllItemsForEmail(email: String): Task<QuerySnapshot> {
+        return itemData.whereEqualTo("email", email).get()
     }
 
 

@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.reusemarket.model.AllItem
 import com.example.reusemarket.model.Data
 import com.example.reusemarket.repository.DataRepositoryImpl
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -23,11 +24,11 @@ class AddItemViewModel @Inject constructor(
     val toastMessage: LiveData<String?>
         get() = _toastMessage
 
-    fun addItemToFirestore(data: Data) {
+    fun addItemToFirestore(allItem: AllItem) {
         _loadingState.value = true
         viewModelScope.launch {
 
-            val response = repository.addDataToItemData(data)
+            val response = repository.addDataToItemData(allItem)
             _loadingState.value = false
 
             if(response.isSuccess){

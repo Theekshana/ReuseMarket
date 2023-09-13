@@ -25,11 +25,6 @@ class ListFragment : Fragment() {
     private lateinit var viewModel: ListViewModel
     private var isBottomNavigationVisible = true
 
-    //new
-    private lateinit var rv: RecyclerView
-    lateinit var userList: ArrayList<AllItem>
-    var db = Firebase.firestore
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
@@ -78,6 +73,7 @@ class ListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
 
         viewModel.dateListState.observe(viewLifecycleOwner) {
             when (it) {
