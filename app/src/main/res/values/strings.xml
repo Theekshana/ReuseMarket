@@ -22,6 +22,7 @@
     <string name="Location">Location</string>
     <string name="hint">hint</string>
     <string name="update">UPDATE</string>
+    <string name="take_photo">take_photo</string>
 
     <string-array name="categories">
         <item>Furniture</item>
