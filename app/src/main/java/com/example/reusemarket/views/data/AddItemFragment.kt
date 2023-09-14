@@ -1,5 +1,7 @@
 package com.example.reusemarket.views.data
 
+import android.app.Activity
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -8,11 +10,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Toast
+import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.example.reusemarket.R
+import com.example.reusemarket.cameraX.MyCameraActivity
 import com.example.reusemarket.constants.gone
 import com.example.reusemarket.constants.show
 import com.example.reusemarket.databinding.FragmentAddItemBinding
@@ -30,6 +34,14 @@ class AddItemFragment : Fragment() {
     private var selectedCategory: String = ""
 
     private var item = AllItem()
+
+    private val activityResultLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result: ActivityResult ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            result.data?.data?.let { setImage(it) }
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -131,24 +143,40 @@ class AddItemFragment : Fragment() {
             resultContent.launch("image/*")
             dialog.dismiss()
         }
+        view.btnCamera.setOnClickListener {
+            captureImage()
+            dialog.dismiss()
+        }
+
         dialog.setCancelable(false)
         dialog.setContentView(view.root)
         dialog.show()
+    }
+
+    private fun captureImage() {
+        val cameraIntent = Intent(requireContext(), MyCameraActivity::class.java)
+        activityResultLauncher.launch(cameraIntent)
     }
 
     private val resultContent =
         registerForActivityResult(ActivityResultContracts.GetContent()) { result ->
             result?.let { imageUri ->
                 // Display the selected image in an ImageView using Glide or any other library
-                Glide.with(this)
-                    .load(imageUri)
-                    .into(binding.itemImageView)
-                binding.imageButton.visibility = View.GONE
+                setImage(imageUri)
 
-                // Save the selected image URI in a property for later use
-                this.imageUri = imageUri
+
             }
         }
+
+    private fun setImage(imageUri: Uri) {
+        Glide.with(this)
+            .load(imageUri)
+            .into(binding.itemImageView)
+        binding.imageButton.visibility = View.GONE
+
+        // Save the selected image URI in a property for later use
+        this.imageUri = imageUri
+    }
 
 
 }
