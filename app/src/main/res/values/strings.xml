@@ -23,6 +23,9 @@
     <string name="hint">hint</string>
     <string name="update">UPDATE</string>
     <string name="take_photo">take_photo</string>
+    <string name="camera">camera</string>
+    <string name="gallery">gallery</string>
+    <string name="dismiss">dismiss</string>
 
     <string-array name="categories">
         <item>Furniture</item>

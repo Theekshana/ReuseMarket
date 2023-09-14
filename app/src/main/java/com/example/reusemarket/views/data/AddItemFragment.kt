@@ -1,10 +1,7 @@
 package com.example.reusemarket.views.data
 
-import android.content.ActivityNotFoundException
-import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.provider.Settings
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -12,7 +9,6 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
@@ -20,7 +16,9 @@ import com.example.reusemarket.R
 import com.example.reusemarket.constants.gone
 import com.example.reusemarket.constants.show
 import com.example.reusemarket.databinding.FragmentAddItemBinding
+import com.example.reusemarket.databinding.ImageCaptureBottomSheetBinding
 import com.example.reusemarket.model.AllItem
+import com.google.android.material.bottomsheet.BottomSheetDialog
 
 
 class AddItemFragment : Fragment() {
@@ -32,7 +30,6 @@ class AddItemFragment : Fragment() {
     private var selectedCategory: String = ""
 
     private var item = AllItem()
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -76,9 +73,7 @@ class AddItemFragment : Fragment() {
 
         val arrayAdapter = ArrayAdapter(requireContext(), R.layout.dropdown_item, categories)
 
-
         binding.autoCompleteTextView.setAdapter(arrayAdapter)
-
 
         binding.autoCompleteTextView.setOnItemClickListener { _, _, position, _ ->
             selectedCategory = arrayAdapter.getItem(position).toString()
@@ -86,11 +81,11 @@ class AddItemFragment : Fragment() {
         }
 
         binding.imageButton.setOnClickListener {
-            resultContent.launch("image/*")
-            //pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
-            //captureImage()
+
+            showSelectImageModal()
 
         }
+
         binding.btnAddItem.setOnClickListener {
 
             val name = binding.etItemName.text.toString()
@@ -109,7 +104,7 @@ class AddItemFragment : Fragment() {
             }
 
             Log.e("TAG", "Data Added")
-            
+
         }
 
 
@@ -125,10 +120,20 @@ class AddItemFragment : Fragment() {
         }
     }
 
-    private fun captureImage() {
-        // Open camera
+    private fun showSelectImageModal() {
+        val dialog = BottomSheetDialog(requireContext())
+        val view = ImageCaptureBottomSheetBinding.inflate(layoutInflater)
+        view.btnDismiss.setOnClickListener {
+            dialog.dismiss()
+        }
 
-
+        view.btnGallery.setOnClickListener {
+            resultContent.launch("image/*")
+            dialog.dismiss()
+        }
+        dialog.setCancelable(false)
+        dialog.setContentView(view.root)
+        dialog.show()
     }
 
     private val resultContent =
@@ -144,25 +149,6 @@ class AddItemFragment : Fragment() {
                 this.imageUri = imageUri
             }
         }
-
-
-    private fun showRotationalDialogForPermissions() {
-        AlertDialog.Builder(requireContext()).setMessage("you have turend off permissions")
-            .setPositiveButton("Go to settings") { _, _ ->
-                try {
-                    val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-                    val uri = Uri.fromParts("package", requireActivity().packageName, null)
-                    intent.data = uri
-                    startActivity(intent)
-                } catch (e: ActivityNotFoundException) {
-                    e.printStackTrace()
-                }
-
-            }
-            .setNegativeButton("CANCEL") { dialog, _ ->
-                dialog.dismiss()
-            }.show()
-    }
 
 
 }
