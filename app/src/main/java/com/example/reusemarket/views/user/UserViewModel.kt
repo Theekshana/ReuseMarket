@@ -21,8 +21,12 @@ class UserViewModel @Inject constructor(
 
     private val _dataListState = MutableLiveData<UIState>()
     val marketItemList = MutableLiveData<List<AllItem>>()
+    private val _dataDeleteState = MutableLiveData<UIState>()
     val dateListState: LiveData<UIState>
         get() = _dataListState
+
+    val dateDeleteState: LiveData<UIState>
+        get() = _dataDeleteState
 
     fun fetchPostedItems() {
         viewModelScope.launch {
@@ -41,12 +45,30 @@ class UserViewModel @Inject constructor(
                     _dataListState.postValue(UIState.Success<List<AllItem>>(userList))
 
                 }.addOnFailureListener {
-                    _dataListState.postValue(UIState.Failure("Failed getting data" ))
+                    _dataListState.postValue(UIState.Failure("Failed getting data"))
                 }
             }
 
         }
 
+
+    }
+
+    fun deleteItem(allItem: AllItem) {
+
+        viewModelScope.launch {
+            _dataListState.postValue(UIState.Loading)
+            try {
+                repository.deleteItem(allItem)
+                (marketItemList.value as ArrayList).remove(allItem)
+                _dataListState.postValue(UIState.Success<List<AllItem>>(marketItemList.value as ArrayList<AllItem>))
+                _dataDeleteState.postValue(UIState.Success<String?>(null))
+
+
+            }catch (ex: Exception){
+                _dataDeleteState.postValue(UIState.Failure("Failed delete item"))
+            }
+        }
 
     }
 

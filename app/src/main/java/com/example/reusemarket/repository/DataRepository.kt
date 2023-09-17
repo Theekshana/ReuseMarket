@@ -14,6 +14,8 @@ interface DataRepository {
 
     fun fetchAllItemsForEmail(email : String): Task<QuerySnapshot>
 
+    suspend fun deleteItem(allItem: AllItem)
+
 
 
 
