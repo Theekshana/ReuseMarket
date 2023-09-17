@@ -11,9 +11,9 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.reusemarket.R
-import com.example.reusemarket.adapters.AllItemAdapter
 import com.example.reusemarket.adapters.UserItemAdapter
 import com.example.reusemarket.constants.UIState
+import com.example.reusemarket.constants.showAlertYeNo
 import com.example.reusemarket.databinding.FragmentUserBinding
 import com.example.reusemarket.model.AllItem
 import com.example.reusemarket.views.data.AddItemFragment
@@ -21,7 +21,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 
-class UserFragment : Fragment() {
+class UserFragment : Fragment(), UserItemAdapter.OnDeleteClicked {
 
     private lateinit var viewModel: UserViewModel
     lateinit var binding: FragmentUserBinding
@@ -71,14 +71,14 @@ class UserFragment : Fragment() {
 
 
     private fun setupScrollListener() {
-        binding.rvUserItem.addOnScrollListener(object : RecyclerView.OnScrollListener(){
+        binding.rvUserItem.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
-                if (newState == RecyclerView.SCROLL_STATE_IDLE){
+                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
                     showOrHideBottomNavigation(true)
                     fabButton.show()
 
-                }else{
+                } else {
                     showOrHideBottomNavigation(false)
                 }
             }
@@ -86,7 +86,8 @@ class UserFragment : Fragment() {
     }
 
     private fun showOrHideBottomNavigation(show: Boolean) {
-        val bottomNav: BottomNavigationView = requireActivity().findViewById(R.id.bottomNavigationView)
+        val bottomNav: BottomNavigationView =
+            requireActivity().findViewById(R.id.bottomNavigationView)
         if (show && !isBottomNavigationVisible) {
             // Show the bottom navigation if it's not visible
             bottomNav.visibility = View.VISIBLE
@@ -125,6 +126,7 @@ class UserFragment : Fragment() {
                         UserItemAdapter(
                             (viewModel.marketItemList.value ?: emptyList()) as ArrayList<AllItem>
                         )
+                    myRecyclerViewAdapter.onDeleteClicked = this
                     binding.rvUserItem.adapter = myRecyclerViewAdapter
                 }
             }
@@ -142,7 +144,6 @@ class UserFragment : Fragment() {
         }
 
 
-
     }
 
 
@@ -152,6 +153,15 @@ class UserFragment : Fragment() {
         transaction.replace(R.id.container, destinationFragment)
         transaction.addToBackStack(null) // Optional: Add the transaction to the back stack for back navigation
         transaction.commit()
+    }
+
+    override fun onDeleteItemClicked(allItem: AllItem) {
+        requireContext().showAlertYeNo("Confirm", "Are sure you want to delete this item?",
+            {
+                viewModel.deleteItem(allItem)
+            })
+
+
     }
 
 

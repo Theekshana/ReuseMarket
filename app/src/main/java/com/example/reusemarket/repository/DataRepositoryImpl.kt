@@ -90,6 +90,13 @@ class DataRepositoryImpl @Inject constructor(
         return itemData.whereEqualTo("email", email).get()
     }
 
+    override suspend fun deleteItem(allItem: AllItem) {
+
+        allItem.itemId?.let {
+            FirebaseFirestore.getInstance().collection("items").document(it).delete().await()
+        }
+    }
+
 
 }
 

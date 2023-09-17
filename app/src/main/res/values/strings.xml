@@ -26,6 +26,8 @@
     <string name="camera">camera</string>
     <string name="gallery">gallery</string>
     <string name="dismiss">dismiss</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 
     <string-array name="categories">
         <item>Furniture</item>

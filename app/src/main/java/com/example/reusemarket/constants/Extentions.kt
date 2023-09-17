@@ -1,6 +1,10 @@
 package com.example.reusemarket.constants
 
+import android.content.Context
+import android.content.DialogInterface
 import android.view.View
+import androidx.appcompat.app.AlertDialog
+import com.example.reusemarket.R
 import com.example.reusemarket.model.Data
 
 
@@ -21,5 +25,24 @@ fun View.gone() {
 
 fun View.hide() {
     visibility = View.INVISIBLE
+}
+
+fun Context.showAlertYeNo(
+    title: String, message: String, positiveClick: () -> Unit,
+    negativeClick: (() -> Unit)? = null
+) {
+    val alertDialog = AlertDialog.Builder(this)
+    alertDialog.apply {
+        setTitle(title)
+        setMessage(message)
+        setPositiveButton("Yes") { dialogInterface: DialogInterface, _: Int ->
+            dialogInterface.dismiss()
+            positiveClick()
+        }
+        setNegativeButton("No") { dialogInterface: DialogInterface, _: Int ->
+            dialogInterface.dismiss()
+            negativeClick?.invoke()
+        }
+    }.show()
 }
 

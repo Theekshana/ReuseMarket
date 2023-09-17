@@ -11,7 +11,11 @@ class UserItemAdapter(
     private var userItems: List<AllItem>,
 ) : RecyclerView.Adapter<UserItemAdapter.UserItemViewHolder>() {
 
+    var onDeleteClicked: OnDeleteClicked? = null
 
+    interface OnDeleteClicked {
+        fun onDeleteItemClicked(allItem: AllItem)
+    }
 
 
     inner class UserItemViewHolder(val binding: UserItemListBinding) :
@@ -38,6 +42,10 @@ class UserItemAdapter(
                 .load(imageUrl)
                 .into(holder.binding.itemImage)
 
+        }
+
+        holder.binding.delete.setOnClickListener {
+            onDeleteClicked?.onDeleteItemClicked(currentItem)
         }
 
 
