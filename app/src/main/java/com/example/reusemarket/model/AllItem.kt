@@ -1,8 +1,10 @@
 package com.example.reusemarket.model
 
 import android.net.Uri
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 
-
+@Parcelize
 data class AllItem(
     var itemId: String? = null,
     val image_url: String? = null,
@@ -11,4 +13,4 @@ data class AllItem(
     val category: String? = null,
     var email: String? = null
 
-)
+): Parcelable

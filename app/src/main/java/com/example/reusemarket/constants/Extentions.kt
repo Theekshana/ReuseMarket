@@ -4,8 +4,6 @@ import android.content.Context
 import android.content.DialogInterface
 import android.view.View
 import androidx.appcompat.app.AlertDialog
-import com.example.reusemarket.R
-import com.example.reusemarket.model.Data
 
 
 object FirestoreTables{
