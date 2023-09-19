@@ -16,6 +16,8 @@ interface DataRepository {
 
     suspend fun deleteItem(allItem: AllItem)
 
+    fun searchItems(searchItem: String): Task<QuerySnapshot>
+
 
 
 

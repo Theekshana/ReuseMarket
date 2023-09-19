@@ -97,6 +97,11 @@ class DataRepositoryImpl @Inject constructor(
         }
     }
 
+    override fun searchItems(searchItem: String): Task<QuerySnapshot> {
+        return itemData.whereGreaterThanOrEqualTo("name", searchItem)
+            .whereLessThanOrEqualTo("name", searchItem + "\uf8ff").get()
+    }
+
 
 }
 
