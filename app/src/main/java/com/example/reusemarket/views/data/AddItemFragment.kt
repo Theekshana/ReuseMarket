@@ -66,6 +66,14 @@ class AddItemFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        arguments?.let {
+            val itemTemp = it.getParcelable<AllItem>("item")
+            if (itemTemp != null) {
+                item = itemTemp
+                fillData()
+            }
+        }
+
         viewModel.loadingState.observeForever {
 
             if (it) {
@@ -119,6 +127,16 @@ class AddItemFragment : Fragment() {
 
         }
 
+
+    }
+
+    private fun fillData() {
+        binding.etItemName.setText(item.name)
+        binding.autoCompleteTextView.setText(item.category)
+
+        Glide.with(this)
+            .load(item.image_url)
+            .into(binding.itemImageView)
 
     }
 

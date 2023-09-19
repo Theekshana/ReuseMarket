@@ -1,20 +1,16 @@
 package com.example.reusemarket
 
-import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.Navigation.findNavController
+import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.fragment.findNavController
-import androidx.navigation.ui.NavigationUI
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.navigateUp
+import androidx.navigation.ui.setupActionBarWithNavController
 import com.example.reusemarket.databinding.ActivityHomeBinding
-import com.example.reusemarket.databinding.FragmentListBinding
 import com.example.reusemarket.views.home.ListFragment
-import com.example.reusemarket.views.home.ListViewModel
 import com.example.reusemarket.views.search.SearchFragment
 import com.example.reusemarket.views.user.UserFragment
 import dagger.hilt.android.AndroidEntryPoint
@@ -22,45 +18,48 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class HomeActivity : AppCompatActivity() {
 
-
+    private lateinit var appBarConfiguration: AppBarConfiguration
+    private lateinit var navController: NavController
     lateinit var binding: ActivityHomeBinding
-//    private lateinit var viewModel: Home
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_home)
-
-
-
+        //setContentView(R.layout.activity_home)
         // Inflate the layout for this fragment
         binding = DataBindingUtil.setContentView(this,R.layout.activity_home)
-//        viewModel = ViewModelProvider(requireActivity())[ListViewModel::class.java]
-        loadFragment(ListFragment())
+        setContentView(binding.root)
+
+        val navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        navController = navHostFragment.navController
+        appBarConfiguration = AppBarConfiguration(navController.graph)
+        setSupportActionBar(binding.topAppBar)
+        setupActionBarWithNavController(navController, appBarConfiguration)
+
         binding.bottomNavigationView.setOnItemSelectedListener {
             when (it.itemId) {
                 R.id.miHome -> {
-                    loadFragment(ListFragment())
+                    navController.navigate(R.id.listFragment)
                     true
                 }
                 R.id.miSearch -> {
-                    loadFragment(SearchFragment())
+                    navController.navigate(R.id.searchFragment)
                     true
                 }
                 R.id.miUser -> {
-                    loadFragment(UserFragment())
+                    navController.navigate(R.id.userFragment)
                     true
                 }
 
                 else -> {true}
             }
         }
-
     }
 
-    private  fun loadFragment(fragment: Fragment){
-        val transaction = supportFragmentManager.beginTransaction()
-        transaction.replace(R.id.container,fragment)
-        transaction.commit()
+    override fun onSupportNavigateUp(): Boolean {
+        return navController.navigateUp(appBarConfiguration)
+                || super.onSupportNavigateUp()
     }
 
 }

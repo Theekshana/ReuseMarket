@@ -6,8 +6,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.reusemarket.R
@@ -16,12 +18,11 @@ import com.example.reusemarket.constants.UIState
 import com.example.reusemarket.constants.showAlertYeNo
 import com.example.reusemarket.databinding.FragmentUserBinding
 import com.example.reusemarket.model.AllItem
-import com.example.reusemarket.views.data.AddItemFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 
-class UserFragment : Fragment(), UserItemAdapter.OnDeleteClicked {
+class UserFragment : Fragment(), UserItemAdapter.OnDeleteClicked, UserItemAdapter.OnEditClicked {
 
     private lateinit var viewModel: UserViewModel
     lateinit var binding: FragmentUserBinding
@@ -34,15 +35,10 @@ class UserFragment : Fragment(), UserItemAdapter.OnDeleteClicked {
         savedInstanceState: Bundle?,
     ): View? {
         // Inflate the layout for this fragment
-        //return inflater.inflate(R.layout.fragment_user, container, false)
-
-        // Inflate the layout for this fragment
         viewModel = ViewModelProvider(requireActivity())[UserViewModel::class.java]
         binding = FragmentUserBinding.inflate(inflater, container, false)
 
         fabButton = binding.btnAdd
-
-
 
         setupScrollListener()
         showOrHideFabButton()
@@ -127,6 +123,7 @@ class UserFragment : Fragment(), UserItemAdapter.OnDeleteClicked {
                             (viewModel.marketItemList.value ?: emptyList()) as ArrayList<AllItem>
                         )
                     myRecyclerViewAdapter.onDeleteClicked = this
+                    myRecyclerViewAdapter.onEditClicked = this
                     binding.rvUserItem.adapter = myRecyclerViewAdapter
                 }
             }
@@ -146,21 +143,24 @@ class UserFragment : Fragment(), UserItemAdapter.OnDeleteClicked {
 
     }
 
-
     private fun navigateToAddItemFragment() {
-        val destinationFragment = AddItemFragment()
-        val transaction = parentFragmentManager.beginTransaction()
-        transaction.replace(R.id.container, destinationFragment)
-        transaction.addToBackStack(null) // Optional: Add the transaction to the back stack for back navigation
-        transaction.commit()
+        findNavController().navigate(R.id.addItemFragment)
     }
 
     override fun onDeleteItemClicked(allItem: AllItem) {
-        requireContext().showAlertYeNo("Confirm", "Are sure you want to delete this item?",
+        requireContext().showAlertYeNo("Confirm", "Are you sure you want to delete this item?",
             {
                 viewModel.deleteItem(allItem)
             })
 
+
+    }
+
+    override fun onEditItemClicked(allItem: AllItem) {
+        findNavController().navigate(
+            R.id.action_userFragment_to_addItemFragment,
+            args = bundleOf("item" to allItem)
+        )
 
     }
 

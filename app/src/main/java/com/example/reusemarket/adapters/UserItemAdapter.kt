@@ -12,6 +12,12 @@ class UserItemAdapter(
 ) : RecyclerView.Adapter<UserItemAdapter.UserItemViewHolder>() {
 
     var onDeleteClicked: OnDeleteClicked? = null
+    var onEditClicked: OnEditClicked? = null
+
+    interface OnEditClicked {
+        fun onEditItemClicked(allItem: AllItem)
+    }
+
 
     interface OnDeleteClicked {
         fun onDeleteItemClicked(allItem: AllItem)
@@ -46,6 +52,11 @@ class UserItemAdapter(
 
         holder.binding.delete.setOnClickListener {
             onDeleteClicked?.onDeleteItemClicked(currentItem)
+        }
+
+        holder.binding.update.setOnClickListener {
+            onEditClicked?.onEditItemClicked(currentItem)
+
         }
 
 

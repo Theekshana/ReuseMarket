@@ -14,7 +14,7 @@
         android:layout_margin="@dimen/search_view_margin"
         app:cardCornerRadius="@dimen/search_view_corner_radius"
         app:cardElevation="@dimen/search_view_card_elevation"
-        app:layout_constraintBottom_toTopOf="@id/recyclerView"
+        app:layout_constraintBottom_toTopOf="@id/searchList"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -40,7 +40,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@android:color/transparent"
-                android:hint="searchInputText"
+                android:hint="@string/search"
                 android:imeOptions="actionSearch"
                 android:inputType="text"
                 android:textSize="@dimen/search_view_text_size" />
@@ -50,7 +50,7 @@
     </com.google.android.material.card.MaterialCardView>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
+        android:id="@+id/searchList"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
