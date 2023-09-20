@@ -1,14 +1,32 @@
 package com.example.reusemarket.views.search
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.example.reusemarket.R
+import android.widget.Toast
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
+import com.example.reusemarket.adapters.SearchItemAdapter
+import com.example.reusemarket.constants.UIState
+import com.example.reusemarket.constants.hide
+import com.example.reusemarket.constants.show
+import com.example.reusemarket.databinding.FragmentSearchBinding
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancelChildren
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 
 class SearchFragment : Fragment() {
+
+    private val debouncePeriod = 500L // 500 milliseconds debounce time
+    private val scope = CoroutineScope(Dispatchers.Main)
+    lateinit var binding: FragmentSearchBinding
+    private lateinit var viewModel: SearchViewModel
 
 
     override fun onCreateView(
@@ -16,7 +34,61 @@ class SearchFragment : Fragment() {
         savedInstanceState: Bundle?,
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_search, container, false)
+        binding = FragmentSearchBinding.inflate(inflater, container, false)
+        viewModel = ViewModelProvider(requireActivity())[SearchViewModel::class.java]
+
+        return binding.root
+    }
+
+    private val textWatcher = object : TextWatcher {
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+
+        override fun afterTextChanged(s: Editable?) {
+            // Cancel any existing debounce job
+            scope.coroutineContext.cancelChildren()
+
+            // Launch a new debounce job
+            scope.launch {
+                delay(debouncePeriod)
+                // Perform search here
+                performSearch(s.toString())
+            }
+        }
+    }
+
+    private fun performSearch(searchText: String) {
+        viewModel.searchItems(searchText)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding.searchInputText.addTextChangedListener(textWatcher)
+        registerForListState()
+    }
+
+    private fun registerForListState() {
+        viewModel.dateListState.observe(viewLifecycleOwner) {
+            when (it) {
+                is UIState.Failure -> {
+                    binding.progressBar.hide()
+                    Toast.makeText(requireContext(), it.toString(), Toast.LENGTH_LONG).show()
+                }
+
+                UIState.Loading -> {
+                    binding.progressBar.show()
+                }
+
+                is UIState.Success<*> -> {
+                    binding.progressBar.hide()
+
+                    val myRecyclerViewAdapter =
+                        SearchItemAdapter(viewModel.marketItemList.value ?: emptyList())
+                    binding.searchList.adapter = myRecyclerViewAdapter
+                }
+            }
+        }
     }
 
 
