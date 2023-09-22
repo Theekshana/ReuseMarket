@@ -10,7 +10,7 @@ import com.example.reusemarket.model.AllItem
 class SearchItemAdapter(private val list: List<AllItem>) :
     RecyclerView.Adapter<SearchItemAdapter.SearchItemViewHolder>() {
 
-    var onItemClickedListener: SearchItemAdapter.OnItemClickedListener? = null
+    var onItemClickedListener: OnItemClickedListener? = null
 
     interface OnItemClickedListener {
         fun onItemClicked(item: AllItem)

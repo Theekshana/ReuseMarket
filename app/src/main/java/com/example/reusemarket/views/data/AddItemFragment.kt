@@ -12,10 +12,13 @@ import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.example.reusemarket.R
+import com.example.reusemarket.adapters.AllItemAdapter
 import com.example.reusemarket.cameraX.MyCameraActivity
 import com.example.reusemarket.constants.gone
 import com.example.reusemarket.constants.show
@@ -195,6 +198,8 @@ class AddItemFragment : Fragment() {
         // Save the selected image URI in a property for later use
         this.imageUri = imageUri
     }
+
+
 
 
 }

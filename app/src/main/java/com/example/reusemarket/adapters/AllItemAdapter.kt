@@ -10,6 +10,11 @@ import com.example.reusemarket.model.AllItem
 class AllItemAdapter(private val AllItemList: ArrayList<AllItem>) :
     RecyclerView.Adapter<AllItemAdapter.AllItemViewHolder>() {
 
+    var onItemClickedListener: OnItemClickedListener? = null
+
+    interface OnItemClickedListener {
+        fun onItemClicked(item: AllItem)
+    }
 
     inner class AllItemViewHolder(val binding: AllItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -32,10 +37,14 @@ class AllItemAdapter(private val AllItemList: ArrayList<AllItem>) :
         holder.binding.txtLocation.text = currentItem.category
         currentItem.image_url?.let { imageUrl ->
             val imageUriString = imageUrl.toString()
-                Glide.with(holder.itemView)
+            Glide.with(holder.itemView)
                 .load(imageUriString)
                 .into(holder.binding.itemImage)
 
+        }
+
+        holder.itemView.setOnClickListener {
+            onItemClickedListener?.onItemClicked(currentItem)
         }
 
 

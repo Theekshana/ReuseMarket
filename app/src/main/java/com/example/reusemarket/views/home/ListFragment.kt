@@ -5,8 +5,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.reusemarket.R
@@ -19,7 +21,7 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
 
-class ListFragment : Fragment() {
+class ListFragment : Fragment(), AllItemAdapter.OnItemClickedListener  {
 
     lateinit var binding: FragmentListBinding
     private lateinit var viewModel: ListViewModel
@@ -97,6 +99,7 @@ class ListFragment : Fragment() {
                         AllItemAdapter(
                             (viewModel.marketItemList.value ?: emptyList()) as ArrayList<AllItem>
                         )
+                    myRecyclerViewAdapter.onItemClickedListener = this
                     binding.rvAllItem.adapter = myRecyclerViewAdapter
                 }
             }
@@ -110,6 +113,13 @@ class ListFragment : Fragment() {
  }*/
 
 
+    }
+
+    override fun onItemClicked(item: AllItem) {
+        findNavController().navigate(
+            R.id.action_listFragment_to_viewItemFragment,
+            args = bundleOf("item" to item)
+        )
     }
 
 
