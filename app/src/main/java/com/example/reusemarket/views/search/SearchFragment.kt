@@ -7,13 +7,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
+import com.example.reusemarket.R
 import com.example.reusemarket.adapters.SearchItemAdapter
 import com.example.reusemarket.constants.UIState
 import com.example.reusemarket.constants.hide
 import com.example.reusemarket.constants.show
 import com.example.reusemarket.databinding.FragmentSearchBinding
+import com.example.reusemarket.model.AllItem
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancelChildren
@@ -21,7 +25,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 
-class SearchFragment : Fragment() {
+class SearchFragment : Fragment(), SearchItemAdapter.OnItemClickedListener {
 
     private val debouncePeriod = 500L // 500 milliseconds debounce time
     private val scope = CoroutineScope(Dispatchers.Main)
@@ -85,10 +89,18 @@ class SearchFragment : Fragment() {
 
                     val myRecyclerViewAdapter =
                         SearchItemAdapter(viewModel.marketItemList.value ?: emptyList())
+                    myRecyclerViewAdapter.onItemClickedListener = this
                     binding.searchList.adapter = myRecyclerViewAdapter
                 }
             }
         }
+    }
+
+    override fun onItemClicked(item: AllItem) {
+        findNavController().navigate(
+            R.id.action_searchFragment_to_viewItemFragment,
+            args = bundleOf("item" to item)
+        )
     }
 
 

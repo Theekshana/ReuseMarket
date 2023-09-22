@@ -12,6 +12,7 @@
             android:layout_height="wrap_content"
             tools:context=".views.data.AddItemFragment">
 
+<!--
             <com.google.android.material.appbar.AppBarLayout
                 android:id="@+id/appBarLayout2"
                 android:layout_width="0dp"
@@ -28,22 +29,23 @@
                     app:title="@string/app_name" />
 
             </com.google.android.material.appbar.AppBarLayout>
+-->
 
             <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/itemImageView"
                 android:layout_width="@dimen/imageView_layout_width"
                 android:layout_height="@dimen/imageView_layout_height"
+                android:layout_marginTop="68dp"
+                android:contentDescription="@string/todo"
                 android:scaleType="centerCrop"
-                app:strokeColor="@color/black"
-                app:strokeWidth="5dp"
-                android:layout_marginTop="@dimen/margin_top"
+                android:src="@drawable/camera_icon"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.497"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/appBarLayout2"
-                tools:ignore="ImageContrastCheck"
-                android:src="@drawable/camera_icon"
-                android:contentDescription="@string/todo" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:strokeColor="@color/black"
+                app:strokeWidth="5dp"
+                tools:ignore="ImageContrastCheck" />
 
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/centerVerticalGuid"
