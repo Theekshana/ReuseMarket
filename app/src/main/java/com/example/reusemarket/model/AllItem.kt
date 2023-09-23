@@ -14,6 +14,6 @@ data class AllItem(
     var email: String? = null,
     var location: String? = null,
     var phoneNumber: String? = null,
-    var description: String? = null,
+    var description: String? = null
 
 ): Parcelable

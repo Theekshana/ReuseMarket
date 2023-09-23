@@ -12,30 +12,12 @@
             android:layout_height="wrap_content"
             tools:context=".views.data.AddItemFragment">
 
-<!--
-            <com.google.android.material.appbar.AppBarLayout
-                android:id="@+id/appBarLayout2"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
-
-                <com.google.android.material.appbar.MaterialToolbar
-                    android:id="@+id/topAppBar"
-                    style="@style/Widget.MaterialComponents.Toolbar.Primary"
-                    android:layout_width="match_parent"
-                    android:layout_height="?attr/actionBarSize"
-                    app:title="@string/app_name" />
-
-            </com.google.android.material.appbar.AppBarLayout>
--->
 
             <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/itemImageView"
                 android:layout_width="@dimen/imageView_layout_width"
                 android:layout_height="@dimen/imageView_layout_height"
-                android:layout_marginTop="68dp"
+                android:layout_marginTop="32dp"
                 android:contentDescription="@string/todo"
                 android:scaleType="centerCrop"
                 android:src="@drawable/camera_icon"
@@ -68,7 +50,8 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="32dp"
                 android:layout_marginEnd="16dp"
-                android:text="Item Name"
+                android:text="@string/item_name"
+                android:textStyle="bold"
                 app:layout_constraintEnd_toStartOf="@+id/centerVerticalGuid"
                 app:layout_constraintHorizontal_bias="0.453"
                 app:layout_constraintStart_toStartOf="parent"
@@ -79,31 +62,32 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
-                android:layout_marginTop="32dp"
-                android:text="TextView"
+                app:layout_constraintBottom_toBottomOf="@+id/item_name"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="@+id/centerVerticalGuid"
-                app:layout_constraintTop_toTopOf="@+id/horizontal_only" />
+                app:layout_constraintTop_toTopOf="@+id/item_name"
+                app:layout_constraintVertical_bias="0.0" />
 
             <TextView
                 android:id="@+id/location"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
+                android:layout_marginTop="16dp"
                 android:text="@string/Location"
+                android:textStyle="bold"
                 app:layout_constraintEnd_toStartOf="@+id/centerVerticalGuid"
                 app:layout_constraintStart_toStartOf="@+id/item_name"
                 app:layout_constraintTop_toBottomOf="@+id/item_name" />
 
             <TextView
-                android:id="@+id/textView8"
+                android:id="@+id/txtLocation"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
-                android:text="TextView"
+                app:layout_constraintBottom_toBottomOf="@+id/location"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/txtItemName"
-                app:layout_constraintTop_toBottomOf="@+id/txtItemName" />
+                app:layout_constraintTop_toTopOf="@+id/location" />
 
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/vertical_only"
@@ -114,24 +98,71 @@
 
             <ImageView
                 android:id="@+id/imgPhone"
-                android:layout_width="75dp"
-                android:layout_height="76dp"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
                 android:layout_marginBottom="68dp"
+                android:padding="8dp"
                 android:src="@drawable/ic_phone"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/vertical_only"
                 app:layout_constraintHorizontal_bias="0.465"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                tools:ignore="ContentDescription" />
 
             <ImageView
                 android:id="@+id/imgEmail"
-                android:layout_width="75dp"
-                android:layout_height="76dp"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
                 android:layout_marginBottom="68dp"
+                android:padding="8dp"
                 android:src="@drawable/ic_email"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/vertical_only" />
+                app:layout_constraintStart_toStartOf="@+id/vertical_only"
+                tools:ignore="ContentDescription" />
+
+            <TextView
+                android:id="@+id/textView4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="category"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="@+id/location"
+                app:layout_constraintTop_toBottomOf="@+id/location" />
+
+            <TextView
+                android:id="@+id/txtCategory"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="@+id/textView4"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/txtLocation"
+                app:layout_constraintTop_toTopOf="@+id/textView4" />
+
+            <TextView
+                android:id="@+id/textView8"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Description"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toStartOf="@+id/centerVerticalGuid"
+                app:layout_constraintStart_toStartOf="@+id/textView4"
+                app:layout_constraintTop_toBottomOf="@+id/textView4" />
+
+            <TextView
+                android:id="@+id/txtMultiLine"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:inputType="textMultiLine"
+                app:layout_constraintBottom_toBottomOf="@+id/textView8"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.116"
+                app:layout_constraintStart_toStartOf="@+id/txtCategory"
+                app:layout_constraintTop_toTopOf="@+id/textView8"
+                app:layout_constraintVertical_bias="0.0" />
+
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>

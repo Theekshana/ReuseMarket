@@ -38,6 +38,9 @@ class ViewItemFragment : Fragment() {
     private fun fillData() {
         item?.let { item ->
             fragmentViewItemBinding.txtItemName.text = item.name
+            fragmentViewItemBinding.txtLocation.text = item.location
+            fragmentViewItemBinding.txtCategory.text = item.category
+            fragmentViewItemBinding.txtMultiLine.text = item.description
             Glide.with(requireContext())
                 .load(item.image_url)
                 .into(fragmentViewItemBinding.itemImageView)
