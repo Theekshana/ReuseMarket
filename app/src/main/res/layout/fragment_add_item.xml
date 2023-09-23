@@ -133,7 +133,7 @@
                             android:id="@+id/etPhoneNumber"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:hint="@string/phone_number"
+                            android:hint="@string/phone_nubmer"
                             android:textColorHint="#546E7A"
                             tools:ignore="TextContrastCheck,VisualLintTextFieldSize" />
                     </com.google.android.material.textfield.TextInputLayout>

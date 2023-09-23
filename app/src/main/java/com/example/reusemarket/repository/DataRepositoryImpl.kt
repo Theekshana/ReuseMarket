@@ -18,10 +18,7 @@ class DataRepositoryImpl @Inject constructor(
     private val itemData = firestore.collection("items")
     private val imageRef = firebaseStorage.reference.child("images")
     override suspend fun addDataToItemData(allItem: AllItem): Result<Unit> {
-        val imageUri = allItem.itemImage
-        val name = allItem.name
-        val category = allItem.category
-
+          val imageUri = allItem.itemImage
 
         return try {
             if (imageUri == null) {
@@ -36,9 +33,12 @@ class DataRepositoryImpl @Inject constructor(
             //furniture item
             val furnitureItem = hashMapOf(
                 "image_url" to downloadUrl.toString(),
-                "name" to name,
-                "category" to category,
-                "email" to allItem.email
+                "name" to allItem.name,
+                "category" to allItem.category,
+                "email" to allItem.email,
+                "location" to allItem.location,
+                "phoneNumber" to allItem.phoneNumber,
+                "description" to allItem.description,
 
                 )
             itemData.add(furnitureItem).await()
@@ -71,7 +71,10 @@ class DataRepositoryImpl @Inject constructor(
                 "imageUrl" to downloadUrl,
                 "name" to name,
                 "category" to category,
-                "email" to allItem.email
+                "email" to allItem.email,
+                "location" to allItem.location,
+                "phoneNumber" to allItem.phoneNumber,
+                "description" to allItem.description,
 
             )
             allItem.itemId?.let { itemData.document(it).update(furnitureItem).await() }

@@ -34,7 +34,7 @@ class AddItemFragment : Fragment() {
     private lateinit var viewModel: AddItemViewModel
     private var imageUri: Uri? = null
 
-    private var selectedCategory: String = ""
+    //private var selectedCategory: String = ""
 
     private var item = AllItem()
 
@@ -98,10 +98,10 @@ class AddItemFragment : Fragment() {
 
         binding.autoCompleteTextView.setAdapter(arrayAdapter)
 
-        binding.autoCompleteTextView.setOnItemClickListener { _, _, position, _ ->
+       /* binding.autoCompleteTextView.setOnItemClickListener { _, _, position, _ ->
             selectedCategory = arrayAdapter.getItem(position).toString()
             Log.d("AddItemFragment", "Selected Category: $selectedCategory")
-        }
+        }*/
 
         binding.imageButton.setOnClickListener {
 
@@ -112,11 +112,18 @@ class AddItemFragment : Fragment() {
         binding.btnAddItem.setOnClickListener {
 
             val name = binding.etItemName.text.toString()
+            val location = binding.etLocation.text.toString()
+            val phoneNumber = binding.etPhoneNumber.text.toString()
+            val description = binding.etDescription.text.toString()
+            val selectedCategory = binding.autoCompleteTextView.text.toString()
 
             val itemMarketItem = item.copy(
                 itemImage = imageUri,
                 name = name,
-                category = selectedCategory
+                category = selectedCategory,
+                location = location,
+                phoneNumber = phoneNumber,
+                description = description
 
             )
 
