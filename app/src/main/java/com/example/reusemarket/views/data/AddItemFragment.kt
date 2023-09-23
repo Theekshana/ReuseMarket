@@ -12,13 +12,10 @@ import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.example.reusemarket.R
-import com.example.reusemarket.adapters.AllItemAdapter
 import com.example.reusemarket.cameraX.MyCameraActivity
 import com.example.reusemarket.constants.gone
 import com.example.reusemarket.constants.show
@@ -34,7 +31,7 @@ class AddItemFragment : Fragment() {
     private lateinit var viewModel: AddItemViewModel
     private var imageUri: Uri? = null
 
-    //private var selectedCategory: String = ""
+    private var selectedCategory: String = ""
 
     private var item = AllItem()
 
@@ -87,6 +84,7 @@ class AddItemFragment : Fragment() {
                 disableEnableControls(true, binding.addItemLayout)
                 binding.btnAddItem.isEnabled = true
                 binding.progressBar.gone()
+                clearTextFields()
 
             }
 
@@ -98,10 +96,10 @@ class AddItemFragment : Fragment() {
 
         binding.autoCompleteTextView.setAdapter(arrayAdapter)
 
-       /* binding.autoCompleteTextView.setOnItemClickListener { _, _, position, _ ->
+        binding.autoCompleteTextView.setOnItemClickListener { _, _, position, _ ->
             selectedCategory = arrayAdapter.getItem(position).toString()
             Log.d("AddItemFragment", "Selected Category: $selectedCategory")
-        }*/
+        }
 
         binding.imageButton.setOnClickListener {
 
@@ -111,33 +109,76 @@ class AddItemFragment : Fragment() {
 
         binding.btnAddItem.setOnClickListener {
 
-            val name = binding.etItemName.text.toString()
-            val location = binding.etLocation.text.toString()
-            val phoneNumber = binding.etPhoneNumber.text.toString()
-            val description = binding.etDescription.text.toString()
-            val selectedCategory = binding.autoCompleteTextView.text.toString()
+            if (validateFields()) {
+                val name = binding.etItemName.text.toString()
+                val location = binding.etLocation.text.toString()
+                val phoneNumber = binding.etPhoneNumber.text.toString()
+                val description = binding.etDescription.text.toString()
+                val selectedCategory = binding.autoCompleteTextView.text.toString()
 
-            val itemMarketItem = item.copy(
-                itemImage = imageUri,
-                name = name,
-                category = selectedCategory,
-                location = location,
-                phoneNumber = phoneNumber,
-                description = description
+                val itemMarketItem = item.copy(
+                    itemImage = imageUri,
+                    name = name,
+                    category = selectedCategory,
+                    location = location,
+                    phoneNumber = phoneNumber,
+                    description = description
 
-            )
+                )
 
-            if (item.itemId.isNullOrEmpty()) {
-                viewModel.addItemToFirestore(itemMarketItem)
-            } else {
-                viewModel.updateItemData(itemMarketItem)
+                if (item.itemId.isNullOrEmpty()) {
+                    viewModel.addItemToFirestore(itemMarketItem)
+                } else {
+                    viewModel.updateItemData(itemMarketItem)
+                }
+
+                Log.e("TAG", "Data Added")
+
             }
 
-            Log.e("TAG", "Data Added")
 
         }
 
 
+    }
+    private fun clearTextFields() {
+        binding.etItemName.text?.clear()
+        binding.autoCompleteTextView.text?.clear()
+        binding.etLocation.text?.clear()
+        binding.etPhoneNumber.text?.clear()
+        binding.etDescription.text?.clear()
+    }
+    private fun validateFields(): Boolean {
+        if (imageUri?.toString().isNullOrEmpty() && item.image_url.isNullOrEmpty()) {
+            Toast.makeText(requireContext(), "Please select an image first", Toast.LENGTH_LONG)
+                .show()
+            return false
+        }
+        if (binding.etItemName.text.isNullOrEmpty()) {
+            binding.txtItemName.error = "Name can not be empty"
+            return false
+        }
+        binding.txtItemName.error = null
+
+        if (selectedCategory.isBlank()) {
+            binding.etCategory.error = "Select a category"
+            return false
+        }
+        binding.etCategory.error = null
+
+        if (binding.etLocation.text.isNullOrEmpty()) {
+            binding.tiLocation.error = "Location can not be empty"
+            return false
+        }
+        binding.tiLocation.error = null
+
+        if (binding.etPhoneNumber.text.isNullOrEmpty()) {
+            binding.tiPhoneNumber.error = "Phone number can not be empty"
+            return false
+        }
+        binding.tiPhoneNumber.error = null
+
+        return true
     }
 
     private fun fillData() {
@@ -205,8 +246,6 @@ class AddItemFragment : Fragment() {
         // Save the selected image URI in a property for later use
         this.imageUri = imageUri
     }
-
-
 
 
 }

@@ -52,8 +52,6 @@ class DataRepositoryImpl @Inject constructor(
 
     override suspend fun updateItemData(allItem: AllItem): Result<Unit> {
         val imageUri = allItem.itemImage
-        val name = allItem.name
-        val category = allItem.category
 
         return try {
 
@@ -69,8 +67,8 @@ class DataRepositoryImpl @Inject constructor(
 
             val furnitureItem = mapOf(
                 "imageUrl" to downloadUrl,
-                "name" to name,
-                "category" to category,
+                "name" to allItem.name,
+                "category" to allItem.category,
                 "email" to allItem.email,
                 "location" to allItem.location,
                 "phoneNumber" to allItem.phoneNumber,
