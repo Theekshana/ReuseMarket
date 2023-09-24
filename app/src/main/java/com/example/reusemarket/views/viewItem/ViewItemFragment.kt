@@ -1,5 +1,7 @@
 package com.example.reusemarket.views.viewItem
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -44,7 +46,37 @@ class ViewItemFragment : Fragment() {
             Glide.with(requireContext())
                 .load(item.image_url)
                 .into(fragmentViewItemBinding.itemImageView)
+
+            fragmentViewItemBinding.imgPhone.setOnClickListener {
+                item.phoneNumber?.let { it1 -> callUser(it1) }
+
+            }
+            fragmentViewItemBinding.imgEmail.setOnClickListener {
+
+                item.name?.let { it1 ->
+                    sendEmail(
+                        item.email.orEmpty(),
+                        it1, "Can I buy this item"
+                    )
+                }
+
+            }
         }
+    }
+
+    private fun sendEmail(email: String, subject: String, message: String) {
+        val emailIntent = Intent(Intent.ACTION_SEND)
+        emailIntent.putExtra(Intent.EXTRA_EMAIL, arrayOf(email))
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, subject)
+        emailIntent.putExtra(Intent.EXTRA_TEXT, message)
+        emailIntent.type = "message/rfc822"
+        startActivity(Intent.createChooser(emailIntent, "Choose an Email client :"))
+    }
+
+    private fun callUser(number: String) {
+        val dialIntent = Intent(Intent.ACTION_DIAL)
+        dialIntent.data = Uri.parse("tel:$number")
+        startActivity(dialIntent)
     }
 
 
