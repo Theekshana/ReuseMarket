@@ -84,6 +84,7 @@ class AddItemFragment : Fragment() {
                 disableEnableControls(true, binding.addItemLayout)
                 binding.btnAddItem.isEnabled = true
                 binding.progressBar.gone()
+                clearTextFields()
 
             }
 
@@ -108,26 +109,76 @@ class AddItemFragment : Fragment() {
 
         binding.btnAddItem.setOnClickListener {
 
-            val name = binding.etItemName.text.toString()
+            if (validateFields()) {
+                val name = binding.etItemName.text.toString()
+                val location = binding.etLocation.text.toString()
+                val phoneNumber = binding.etPhoneNumber.text.toString()
+                val description = binding.etDescription.text.toString()
+                val selectedCategory = binding.autoCompleteTextView.text.toString()
 
-            val itemMarketItem = item.copy(
-                itemImage = imageUri,
-                name = name,
-                category = selectedCategory
+                val itemMarketItem = item.copy(
+                    itemImage = imageUri,
+                    name = name,
+                    category = selectedCategory,
+                    location = location,
+                    phoneNumber = phoneNumber,
+                    description = description
 
-            )
+                )
 
-            if (item.itemId.isNullOrEmpty()) {
-                viewModel.addItemToFirestore(itemMarketItem)
-            } else {
-                viewModel.updateItemData(itemMarketItem)
+                if (item.itemId.isNullOrEmpty()) {
+                    viewModel.addItemToFirestore(itemMarketItem)
+                } else {
+                    viewModel.updateItemData(itemMarketItem)
+                }
+
+                Log.e("TAG", "Data Added")
+
             }
 
-            Log.e("TAG", "Data Added")
 
         }
 
 
+    }
+    private fun clearTextFields() {
+        binding.etItemName.text?.clear()
+        binding.autoCompleteTextView.text?.clear()
+        binding.etLocation.text?.clear()
+        binding.etPhoneNumber.text?.clear()
+        binding.etDescription.text?.clear()
+    }
+    private fun validateFields(): Boolean {
+        if (imageUri?.toString().isNullOrEmpty() && item.image_url.isNullOrEmpty()) {
+            Toast.makeText(requireContext(), "Please select an image first", Toast.LENGTH_LONG)
+                .show()
+            return false
+        }
+        if (binding.etItemName.text.isNullOrEmpty()) {
+            binding.txtItemName.error = "Name can not be empty"
+            return false
+        }
+        binding.txtItemName.error = null
+
+        if (selectedCategory.isBlank()) {
+            binding.etCategory.error = "Select a category"
+            return false
+        }
+        binding.etCategory.error = null
+
+        if (binding.etLocation.text.isNullOrEmpty()) {
+            binding.tiLocation.error = "Location can not be empty"
+            return false
+        }
+        binding.tiLocation.error = null
+
+        if (binding.etPhoneNumber.text.isNullOrEmpty()) {
+            binding.tiPhoneNumber.error = "Phone number can not be empty"
+            return false
+        }
+        binding.tiPhoneNumber.error = null
+
+        return true
     }
 
     private fun fillData() {

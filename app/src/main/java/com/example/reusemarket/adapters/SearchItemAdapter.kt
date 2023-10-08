@@ -10,6 +10,13 @@ import com.example.reusemarket.model.AllItem
 class SearchItemAdapter(private val list: List<AllItem>) :
     RecyclerView.Adapter<SearchItemAdapter.SearchItemViewHolder>() {
 
+    var onItemClickedListener: OnItemClickedListener? = null
+
+    interface OnItemClickedListener {
+        fun onItemClicked(item: AllItem)
+    }
+
+
     inner class SearchItemViewHolder(val binding: SearchItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
@@ -32,6 +39,9 @@ class SearchItemAdapter(private val list: List<AllItem>) :
                 .load(imageUrl)
                 .into(holder.binding.itemImage)
 
+        }
+        holder.itemView.setOnClickListener {
+            onItemClickedListener?.onItemClicked(currentItem)
         }
     }
 
