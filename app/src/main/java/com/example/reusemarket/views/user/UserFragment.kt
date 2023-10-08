@@ -1,13 +1,20 @@
 package com.example.reusemarket.views.user
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.os.bundleOf
+import androidx.core.view.MenuHost
+import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -18,6 +25,7 @@ import com.example.reusemarket.constants.UIState
 import com.example.reusemarket.constants.showAlertYeNo
 import com.example.reusemarket.databinding.FragmentUserBinding
 import com.example.reusemarket.model.AllItem
+import com.example.reusemarket.views.login.MainActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
@@ -99,6 +107,26 @@ class UserFragment : Fragment(), UserItemAdapter.OnDeleteClicked, UserItemAdapte
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val menuHost: MenuHost = requireActivity()
+        menuHost.addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                // Add menu items here
+                menuInflater.inflate(R.menu.user_menu, menu)
+            }
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                // Handle the menu selection
+                return when (menuItem.itemId) {
+                    R.id.action_logout -> {
+                        logout()
+                        true
+                    }
+
+                    else -> false
+                }
+            }
+        }, viewLifecycleOwner, Lifecycle.State.RESUMED)
+
 
         viewModel.dateListState.observe(viewLifecycleOwner) {
             when (it) {
@@ -141,6 +169,15 @@ class UserFragment : Fragment(), UserItemAdapter.OnDeleteClicked, UserItemAdapte
         }
 
 
+    }
+
+    private fun logout() {
+        requireContext().showAlertYeNo("Logout", "Are you sure you want to logout", {
+            viewModel.logout()
+            val homeIntent = Intent(requireContext(), MainActivity::class.java)
+            startActivity(homeIntent)
+            requireActivity().finish()
+        })
     }
 
     private fun navigateToAddItemFragment() {

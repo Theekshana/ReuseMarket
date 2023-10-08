@@ -32,9 +32,6 @@ class AuthRepositoryImpl @Inject constructor(
         firebaseAuth.signOut()
     }
 
-    override fun deleteUser() {
-       firebaseAuth.currentUser?.delete()
-    }
 
 
 }

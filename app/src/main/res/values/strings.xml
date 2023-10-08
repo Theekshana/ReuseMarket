@@ -31,6 +31,7 @@
     <string name="add_item_button">add_item_button</string>
     <string name="take_photo">Take Photo</string>
     <string name="select">Select</string>
+    <string name="logout">logout</string>
 
     <string-array name="categories">
         <item>Furniture</item>
