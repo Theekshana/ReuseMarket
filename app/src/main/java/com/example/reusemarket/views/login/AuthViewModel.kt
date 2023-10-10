@@ -17,9 +17,9 @@ class AuthViewModel @Inject constructor(
 ) : ViewModel() {
 
     //current sign-up status
-    private val _signUp = MutableLiveData<UIState>()
-    val signUp: LiveData<UIState>
-        get() = _signUp
+    private val _signIn = MutableLiveData<UIState>()
+    val signIn: LiveData<UIState>
+        get() = _signIn
 
     /**
      * Initiates the sign-up process with the provided email and password.
@@ -27,16 +27,16 @@ class AuthViewModel @Inject constructor(
      * @param email The email address used for sign-up.
      * @param password The password associated with the account being created.
      */
-    fun signUpResponse(email: String, password: String) {
+    fun signIn(email: String, password: String) {
         viewModelScope.launch {
             // Set the initial loading state
-            _signUp.postValue(UIState.Loading)
+            _signIn.postValue(UIState.Loading)
             // Perform the login operation
-            repository.signUp(email, password).addOnSuccessListener {
-                _signUp.postValue(UIState.Success(it.user))
+            repository.signIn(email, password).addOnSuccessListener {
+                _signIn.postValue(UIState.Success(it.user))
             }.addOnFailureListener {
                 // Login failed
-                _signUp.postValue(UIState.Failure("Login failed"))
+                _signIn.postValue(UIState.Failure("Login failed"))
             }
 
         }
@@ -45,10 +45,10 @@ class AuthViewModel @Inject constructor(
     fun signInWithGoogle(account: SignInCredential) {
         viewModelScope.launch {
             repository.signUpWithGoogle(account).addOnSuccessListener {
-                _signUp.postValue(UIState.Success(it.user))
+                _signIn.postValue(UIState.Success(it.user))
 
             }.addOnFailureListener {
-                _signUp.postValue(UIState.Failure("Login Failed"))
+                _signIn.postValue(UIState.Failure("Login Failed"))
 
             }
         }
@@ -57,7 +57,6 @@ class AuthViewModel @Inject constructor(
     fun isAlreadyLoggedIn(): Boolean {
         return repository.getCurrentUser() != null
     }
-
 
 
 }

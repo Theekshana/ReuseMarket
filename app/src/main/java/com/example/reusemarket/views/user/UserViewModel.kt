@@ -72,5 +72,9 @@ class UserViewModel @Inject constructor(
 
     }
 
+    fun logout() {
+        repositoryAuth.signOut()
+    }
+
 
 }

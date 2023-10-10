@@ -7,6 +7,10 @@
     <dimen name="button_margin_top">8dp</dimen>
     <dimen name="editText_height">60dp</dimen>
     <dimen name="padding">10dp</dimen>
+    <dimen name="recycle_view_margin">8dp</dimen>
+    <dimen name="round_icon_stroke_width">0.5dp</dimen>
+    <dimen name="content_horizontal_margin">16dp</dimen>
+    <dimen name="forward_arrow_size">15dp</dimen>
 
     /* Font size */
     <dimen name="text_small">14sp</dimen>
@@ -30,6 +34,11 @@
 
     <dimen name="bottom_navigation_height">100dp</dimen>
     <dimen name="top_app_bar_height">100dp</dimen>
+
+    /* Card Views Dimensions */
+    <dimen name="content_card_view_corner_radius">20dp</dimen>
+    <dimen name="content_card_view_elevation">10dp</dimen>
+    <dimen name="list_card_view_corner_radius">12dp</dimen>
 
 
 

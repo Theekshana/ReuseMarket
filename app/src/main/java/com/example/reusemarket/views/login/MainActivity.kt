@@ -1,24 +1,22 @@
 package com.example.reusemarket.views.login
 
-import android.app.Activity
-import android.content.ContentValues
 import android.content.Intent
 import android.content.IntentSender
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.IntentSenderRequest
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import com.example.reusemarket.HomeActivity
 import com.example.reusemarket.R
 import com.example.reusemarket.constants.UIState
 import com.example.reusemarket.databinding.ActivityMainBinding
+import com.example.reusemarket.views.signup.SignUpActivity
 import com.google.android.gms.auth.api.identity.BeginSignInRequest
 import com.google.android.gms.auth.api.identity.Identity
 import com.google.android.gms.auth.api.identity.SignInClient
-import com.google.android.gms.common.api.ApiException
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -27,114 +25,91 @@ class MainActivity : AppCompatActivity() {
     private lateinit var viewModel: AuthViewModel
     private var oneTapClient: SignInClient? = null
     private var signInRequest: BeginSignInRequest? = null
-
-    private val myActivityResultLauncher =
-        registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) { result ->
-
-            if (result.resultCode == Activity.RESULT_OK) {
-                try {
-                    val credential = oneTapClient!!.getSignInCredentialFromIntent(result.data)
-                    viewModel.signInWithGoogle(credential)
-                    // navigateToListFragment()
-                    //navigateToAddItemFragment()
-                } catch (e: ApiException) {
-                    TODO("Exception handling")
-                }
-            } else {
-                // Result was not successful, handle the failure
-            }
-        }
-
+    private lateinit var myActivityResultLauncher: ActivityResultLauncher<IntentSenderRequest>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         viewModel = ViewModelProvider(this)[AuthViewModel::class.java]
-        binding.vm = viewModel
         binding.lifecycleOwner = this
 
         checkAlreadyLoginUser()
 
-        initUi()
-
+        setupUI()
         googleSignIn()
-
-
     }
 
     private fun checkAlreadyLoginUser() {
         if (viewModel.isAlreadyLoggedIn()) {
             navigateToHomeActivity()
-
-
         }
     }
 
     private fun navigateToHomeActivity() {
-        val homeIntent = Intent(this@MainActivity, HomeActivity::class.java)
+        val homeIntent = Intent(this, HomeActivity::class.java)
         startActivity(homeIntent)
         finish()
     }
 
+    private fun navigateToSignUpActivity() {
+        val signUpIntent = Intent(this, SignUpActivity::class.java)
+        startActivity(signUpIntent)
+    }
 
-    private fun initUi() {
+    private fun setupUI() {
+        binding.btnSignupWithEmail.setOnClickListener {
+            navigateToSignUpActivity()
+        }
+
         binding.btnLogin.setOnClickListener {
-            // Retrieve the email and password values from the EditText
-            val email = binding.etEmail.text
-            val password = binding.etPassword.text
+            val email = binding.etEmail.text.toString()
+            val password = binding.etPassword.text.toString()
 
-            if (email.isNullOrEmpty()) {
-                binding.etEmail.error = "Please enter email"
+            if (email.isEmpty() || password.isEmpty()) {
+                Toast.makeText(this, "Please enter both email and password", Toast.LENGTH_SHORT)
+                    .show()
                 return@setOnClickListener
             }
 
-            if (password.isNullOrEmpty()) {
-                binding.etPassword.error = "Enter password"
-                return@setOnClickListener
-            }
-            // Initiates the sign-up process
-            viewModel.signUpResponse(email.toString(), password.toString())
+            viewModel.signIn(email, password)
 
-            viewModel.signUp.observe(this) {
+            viewModel.signIn.observe(this) {
                 when (it) {
                     is UIState.Loading -> {
-
+                        showProgress(true)
                     }
 
                     is UIState.Success<*> -> {
-
+                        showProgress(false)
                         navigateToHomeActivity()
-
                     }
 
                     is UIState.Failure -> {
-
-
+                        showProgress(false)
+                        showError(it.error)
                     }
                 }
             }
-
         }
 
         binding.btnSignupGoogle.setOnClickListener {
-
-            oneTapClient!!.beginSignIn(signInRequest!!)
-                .addOnSuccessListener { result ->
-                    try {
-                        val intent =
-                            IntentSenderRequest.Builder(result.pendingIntent.intentSender)
-                                .build()
-                        myActivityResultLauncher.launch(intent)
-
-
-                    } catch (e: IntentSender.SendIntentException) {
-                        Log.e(ContentValues.TAG, "Couldn't start One Tap UI: " + e.localizedMessage)
-                    }
-                }
-
-
+            initiateGoogleSignIn()
         }
+    }
+
+    private fun showProgress(show: Boolean) {
+        binding.progressBar.visibility = if (show) {
+            android.view.View.VISIBLE
+        } else {
+            android.view.View.GONE
+        }
+    }
+
+    private fun showError(error: String) {
+        binding.txtError.visibility = android.view.View.VISIBLE
+        binding.txtError.text = error
     }
 
     private fun googleSignIn() {
@@ -149,18 +124,33 @@ class MainActivity : AppCompatActivity() {
                 BeginSignInRequest.GoogleIdTokenRequestOptions.builder()
                     .setSupported(true)
                     .setServerClientId(getString(R.string.web_client_id))
-                    // Only show accounts previously used to sign in.
                     .setFilterByAuthorizedAccounts(false)
                     .build()
             )
-            // Automatically sign in when exactly one credential is retrieved.
             .setAutoSelectEnabled(true)
             .build()
     }
 
+    private fun initiateGoogleSignIn() {
+        if (oneTapClient != null && signInRequest != null) {
+            oneTapClient!!.beginSignIn(signInRequest!!)
+                .addOnSuccessListener { result ->
+                    try {
+                        val intentSenderRequest =
+                            IntentSenderRequest.Builder(result.pendingIntent.intentSender)
+                                .build()
+                        myActivityResultLauncher.launch(intentSenderRequest)
+                    } catch (e: IntentSender.SendIntentException) {
+                        Log.e(TAG, "Couldn't start One Tap UI: ${e.localizedMessage}")
+                    }
+                }
+                .addOnFailureListener { e ->
+                    Log.e(TAG, "Google sign-in failed: ${e.localizedMessage}")
+                }
+        }
+    }
 
+    companion object {
+        private const val TAG = "MainActivity"
+    }
 }
-
-
-
-
