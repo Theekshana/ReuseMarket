@@ -7,5 +7,6 @@
     <color name="colorAccent">#D81B60</color>
     <color name="separator_color">#504E4E</color>
     <color name="colorError">#FF0057</color>
+    <color name="round_icon_stroke_color">#FF3700B3</color>
 
 </resources>
