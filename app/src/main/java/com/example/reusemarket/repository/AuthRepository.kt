@@ -7,7 +7,10 @@ import com.google.firebase.auth.FirebaseUser
 
 
 interface AuthRepository {
+
+    suspend fun signIn(email: String, password: String): Task<AuthResult>
     suspend fun signUp(email: String, password: String): Task<AuthResult>
+
 
     suspend fun signUpWithGoogle(account: SignInCredential): Task<AuthResult>
 

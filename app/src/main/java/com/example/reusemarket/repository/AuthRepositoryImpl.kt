@@ -12,6 +12,10 @@ import javax.inject.Inject
 class AuthRepositoryImpl @Inject constructor(
     private val firebaseAuth: FirebaseAuth
 ) : AuthRepository {
+    override suspend fun signIn(email: String, password: String): Task<AuthResult> {
+        return  firebaseAuth.signInWithEmailAndPassword(email, password)
+    }
+
     override suspend fun signUp(
         email: String,
         password: String,
