@@ -48,16 +48,20 @@ class ListFragment : Fragment(), AllItemAdapter.OnItemClickedListener  {
 
     private fun setupScrollListener() {
         binding.rvAllItem.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                super.onScrollStateChanged(recyclerView, newState)
-                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                    showOrHideBottomNavigation(true)
-                } else {
-                    showOrHideBottomNavigation(false)
-                }
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+
+                val layoutManager = recyclerView.layoutManager as LinearLayoutManager
+                val lastVisibleItemPosition = layoutManager.findLastCompletelyVisibleItemPosition()
+                val totalItemCount = layoutManager.itemCount
+                // Adjust this threshold as needed; it determines when to hide/show the BottomNavigationView
+                val threshold = 1
+
+                showOrHideBottomNavigation(totalItemCount - lastVisibleItemPosition > threshold)
             }
         })
     }
+
 
     private fun showOrHideBottomNavigation(show: Boolean) {
         val bottomNav: BottomNavigationView =

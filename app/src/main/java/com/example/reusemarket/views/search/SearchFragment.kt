@@ -41,6 +41,8 @@ class SearchFragment : Fragment(), SearchItemAdapter.OnItemClickedListener {
         binding = FragmentSearchBinding.inflate(inflater, container, false)
         viewModel = ViewModelProvider(requireActivity())[SearchViewModel::class.java]
 
+
+
         return binding.root
     }
 

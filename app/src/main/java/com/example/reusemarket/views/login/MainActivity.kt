@@ -1,5 +1,6 @@
 package com.example.reusemarket.views.login
 
+import android.app.Activity
 import android.content.Intent
 import android.content.IntentSender
 import android.os.Bundle
@@ -7,6 +8,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.IntentSenderRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.example.reusemarket.HomeActivity
@@ -17,6 +19,7 @@ import com.example.reusemarket.views.signup.SignUpActivity
 import com.google.android.gms.auth.api.identity.BeginSignInRequest
 import com.google.android.gms.auth.api.identity.Identity
 import com.google.android.gms.auth.api.identity.SignInClient
+import com.google.android.gms.common.api.ApiException
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -25,7 +28,23 @@ class MainActivity : AppCompatActivity() {
     private lateinit var viewModel: AuthViewModel
     private var oneTapClient: SignInClient? = null
     private var signInRequest: BeginSignInRequest? = null
-    private lateinit var myActivityResultLauncher: ActivityResultLauncher<IntentSenderRequest>
+
+    private val myActivityResultLauncher =
+        registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) { result ->
+
+            if (result.resultCode == Activity.RESULT_OK) {
+                try {
+                    val credential = oneTapClient!!.getSignInCredentialFromIntent(result.data)
+                    viewModel.signInWithGoogle(credential)
+                    navigateToHomeActivity()
+
+                } catch (e: ApiException) {
+                    TODO("Exception handling")
+                }
+            } else {
+                // Result was not successful, handle the failure
+            }
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

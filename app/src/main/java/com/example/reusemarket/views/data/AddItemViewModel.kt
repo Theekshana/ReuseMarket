@@ -25,6 +25,8 @@ class AddItemViewModel @Inject constructor(
     val toastMessage: LiveData<String?>
         get() = _toastMessage
 
+
+
     fun addItemToFirestore(allItem: AllItem) {
         _loadingState.value = true
         allItem.email = repositoryAuth.getCurrentUser()?.email ?: ""

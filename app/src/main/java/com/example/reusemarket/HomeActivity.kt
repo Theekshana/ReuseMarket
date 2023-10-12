@@ -37,6 +37,8 @@ class HomeActivity : AppCompatActivity() {
         setSupportActionBar(binding.topAppBar)
         setupActionBarWithNavController(navController, appBarConfiguration)
 
+
+
         binding.bottomNavigationView.setOnItemSelectedListener {
             when (it.itemId) {
                 R.id.miHome -> {

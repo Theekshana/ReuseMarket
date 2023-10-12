@@ -3,187 +3,203 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <FrameLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:fillViewport="true">
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/addItemLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <ScrollView
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:fillViewport="true">
 
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/itemImageView"
+                android:layout_width="@dimen/imageView_layout_width"
+                android:layout_height="@dimen/imageView_layout_height"
+                android:layout_margin="8dp"
+                android:layout_marginTop="16dp"
+                android:contentDescription="@string/todo"
+                android:padding="5dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/camera"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.497"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:shapeAppearanceOverlay="@style/roundedImageViewRounded"
+                app:strokeColor="@color/black"
+                app:strokeWidth="5dp"
+                tools:ignore="ImageContrastCheck" />
 
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/addItemLayout"
+            <ImageButton
+                android:id="@+id/imageButton"
+                android:layout_width="@dimen/layout_width"
+                android:layout_height="@dimen/layout_height"
+                android:background="@drawable/custom_button"
+                android:contentDescription="@string/upload_image"
+                android:src="@drawable/ic_camera"
+                app:layout_constraintBottom_toBottomOf="@+id/itemImageView"
+                app:layout_constraintEnd_toEndOf="@+id/itemImageView"
+                app:layout_constraintHorizontal_bias="0.993"
+                app:layout_constraintStart_toStartOf="@+id/itemImageView"
+                tools:ignore="ImageContrastCheck" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/txtItemName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_start"
+                android:layout_marginTop="@dimen/margin_top"
+                android:layout_marginEnd="@dimen/margin_end"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/itemImageView">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etItemName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    tools:context=".views.additem.AddItemFragment">
+                    android:fontFamily="@font/aclonica"
+                    android:hint="@string/item_name"
+                    android:imeOptions="actionNext"
+                    android:inputType="text"
+                    android:textColorHint="#546E7A"
+                    tools:ignore="TextContrastCheck,VisualLintTextFieldSize" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/etCategory"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_start"
+                android:layout_marginTop="@dimen/margin_top"
+                android:layout_marginEnd="@dimen/margin_end"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txtItemName">
+
+                <AutoCompleteTextView
+                    android:id="@+id/autoCompleteTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:focusable="true"
+                    android:fontFamily="@font/aclonica"
+                    android:hint="@string/select"
+                    android:imeOptions="actionNext"
+                    android:inputType="none"
+                    tools:ignore="LabelFor,VisualLintTextFieldSize" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tiLocation"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_start"
+                android:layout_marginTop="@dimen/margin_top"
+                android:layout_marginEnd="@dimen/margin_end"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/etCategory">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etLocation"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/aclonica"
+                    android:hint="@string/Location"
+                    android:imeOptions="actionNext"
+                    android:inputType="text"
+                    tools:ignore="TextContrastCheck,VisualLintTextFieldSize" />
 
 
-                    <com.google.android.material.imageview.ShapeableImageView
-                        android:id="@+id/itemImageView"
-                        android:layout_width="@dimen/imageView_layout_width"
-                        android:layout_height="@dimen/imageView_layout_height"
-                        android:layout_marginTop="16dp"
-                        android:contentDescription="@string/todo"
-                        android:scaleType="centerCrop"
-                        android:src="@drawable/camera_icon"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.497"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:strokeColor="@color/black"
-                        app:strokeWidth="5dp"
-                        tools:ignore="ImageContrastCheck" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-                    <ImageButton
-                        android:id="@+id/imageButton"
-                        android:layout_width="@dimen/layout_width"
-                        android:layout_height="@dimen/layout_height"
-                        android:background="@drawable/custom_button"
-                        android:contentDescription="@string/upload_image"
-                        android:src="@drawable/ic_camera"
-                        app:layout_constraintBottom_toBottomOf="@+id/itemImageView"
-                        app:layout_constraintEnd_toEndOf="@+id/itemImageView"
-                        app:layout_constraintHorizontal_bias="1.0"
-                        app:layout_constraintStart_toStartOf="@+id/itemImageView"
-                        app:layout_constraintTop_toBottomOf="@+id/itemImageView"
-                        app:layout_constraintVertical_bias="0.74"
-                        tools:ignore="ImageContrastCheck" />
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tiPhoneNumber"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_start"
+                android:layout_marginTop="@dimen/margin_top"
+                android:layout_marginEnd="@dimen/margin_end"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tiLocation">
 
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/txtItemName"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/margin_start"
-                        android:layout_marginTop="@dimen/margin_top"
-                        android:layout_marginEnd="@dimen/margin_end"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/itemImageView">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etPhoneNumber"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/aclonica"
+                    android:hint="@string/phone_number"
+                    android:imeOptions="actionNext"
+                    android:inputType="phone"
+                    android:textColorHint="#546E7A"
+                    tools:ignore="TextContrastCheck,VisualLintTextFieldSize" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/etItemName"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:hint="@string/item_name"
-                            android:textColorHint="#546E7A"
-                            tools:ignore="TextContrastCheck,VisualLintTextFieldSize" />
-                    </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tiDescription"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_start"
+                android:layout_marginTop="@dimen/margin_top"
+                android:layout_marginEnd="@dimen/margin_end"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tiPhoneNumber">
 
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/etCategory"
-                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/margin_start"
-                        android:layout_marginTop="@dimen/margin_top"
-                        android:layout_marginEnd="@dimen/margin_end"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/txtItemName">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etDescription"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:focusable="true"
+                    android:fontFamily="@font/aclonica"
+                    android:hint="@string/description"
+                    android:imeOptions="actionNext"
+                    android:inputType="textMultiLine"
+                    android:maxLines="5"
+                    android:textColorHint="#546E7A"
+                    tools:ignore="TextContrastCheck,VisualLintTextFieldSize" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-                        <AutoCompleteTextView
-                            android:id="@+id/autoCompleteTextView"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:inputType="none"
-                            android:hint="@string/select"
-                            tools:ignore="LabelFor,VisualLintTextFieldSize" />
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/tiLocation"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/margin_start"
-                        android:layout_marginTop="@dimen/margin_top"
-                        android:layout_marginEnd="@dimen/margin_end"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/etCategory">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/etLocation"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:hint="@string/Location"
-                            tools:ignore="TextContrastCheck,VisualLintTextFieldSize" />
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/tiPhoneNumber"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/margin_start"
-                        android:layout_marginTop="@dimen/margin_top"
-                        android:layout_marginEnd="@dimen/margin_end"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/tiLocation">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/etPhoneNumber"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:hint="@string/phone_number"
-                            android:textColorHint="#546E7A"
-                            tools:ignore="TextContrastCheck,VisualLintTextFieldSize" />
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/tiDescription"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/margin_start"
-                        android:layout_marginTop="@dimen/margin_top"
-                        android:layout_marginEnd="@dimen/margin_end"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/tiPhoneNumber">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/etDescription"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:hint="@string/description"
-                            android:inputType="textMultiLine"
-                            android:maxLines="5"
-                            android:textColorHint="#546E7A"
-                            tools:ignore="TextContrastCheck,VisualLintTextFieldSize" />
-                    </com.google.android.material.textfield.TextInputLayout>
-
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-            </ScrollView>
 
             <Button
                 android:id="@+id/btnAddItem"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="@dimen/margin_top"
+                android:layout_marginTop="36dp"
+                android:layout_marginBottom="20dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:fontFamily="@font/aclonica"
                 android:text="@string/save"
-                android:layout_marginBottom="16dp"
-                android:textSize="@dimen/text_large" />
+                android:textSize="@dimen/text_large"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.498"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tiDescription"
+                app:layout_constraintVertical_bias="0.015" />
 
-        </LinearLayout>
+            <ProgressBar
+                android:id="@+id/progressBar"
+                style="?android:attr/progressBarStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="@+id/btnAddItem"
+                app:layout_constraintEnd_toEndOf="@+id/btnAddItem"
+                app:layout_constraintStart_toStartOf="@+id/btnAddItem"
+                app:layout_constraintTop_toTopOf="@+id/btnAddItem" />
 
-        <ProgressBar
-            android:id="@+id/progressBar"
-            style="?android:attr/progressBarStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:visibility="gone" />
-    </FrameLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
 </layout>

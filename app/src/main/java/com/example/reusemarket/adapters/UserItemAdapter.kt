@@ -48,8 +48,7 @@ class UserItemAdapter(
                 .load(imageUrl)
                 .into(holder.binding.itemImage)
 
-        }
-
+       }
         holder.binding.delete.setOnClickListener {
             onDeleteClicked?.onDeleteItemClicked(currentItem)
         }

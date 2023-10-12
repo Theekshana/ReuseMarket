@@ -36,7 +36,11 @@
 
     <string-array name="categories">
         <item>Furniture</item>
-        <item>Electric</item>
+        <item>Electronics</item>
+        <item>Clothing and Accessories</item>
+        <item>Vehicles</item>
+        <item>Tools and Equipment</item>
+        <item>Home and Garden</item>
     </string-array>
 
 </resources>

@@ -46,6 +46,7 @@ class UserFragment : Fragment(), UserItemAdapter.OnDeleteClicked, UserItemAdapte
         viewModel = ViewModelProvider(requireActivity())[UserViewModel::class.java]
         binding = FragmentUserBinding.inflate(inflater, container, false)
 
+
         fabButton = binding.btnAdd
 
         setupScrollListener()
@@ -76,15 +77,16 @@ class UserFragment : Fragment(), UserItemAdapter.OnDeleteClicked, UserItemAdapte
 
     private fun setupScrollListener() {
         binding.rvUserItem.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                super.onScrollStateChanged(recyclerView, newState)
-                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                    showOrHideBottomNavigation(true)
-                    fabButton.show()
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
 
-                } else {
-                    showOrHideBottomNavigation(false)
-                }
+                val layoutManager = recyclerView.layoutManager as LinearLayoutManager
+                val lastVisibleItemPosition = layoutManager.findLastCompletelyVisibleItemPosition()
+                val totalItemCount = layoutManager.itemCount
+                // Adjust this threshold as needed; it determines when to hide/show the BottomNavigationView
+                val threshold = 1
+
+                showOrHideBottomNavigation(totalItemCount - lastVisibleItemPosition > threshold)
             }
         })
     }
