@@ -84,9 +84,13 @@ class UserFragment : Fragment(), UserItemAdapter.OnDeleteClicked, UserItemAdapte
                 val lastVisibleItemPosition = layoutManager.findLastCompletelyVisibleItemPosition()
                 val totalItemCount = layoutManager.itemCount
                 // Adjust this threshold as needed; it determines when to hide/show the BottomNavigationView
-                val threshold = 1
 
-                showOrHideBottomNavigation(totalItemCount - lastVisibleItemPosition > threshold)
+                if (totalItemCount > 9){
+                    val threshold = 1
+
+                    showOrHideBottomNavigation(totalItemCount - lastVisibleItemPosition > threshold)
+                }
+
             }
         })
     }
