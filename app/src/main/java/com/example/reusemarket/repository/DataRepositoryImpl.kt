@@ -31,7 +31,7 @@ class DataRepositoryImpl @Inject constructor(
             val downloadUrl = uploadTask.storage.downloadUrl.await()
             // Save the download URL and name in Firestore
             //furniture item
-            val furnitureItem = hashMapOf(
+            val usedItem = hashMapOf(
                 "image_url" to downloadUrl.toString(),
                 "name" to allItem.name,
                 "category" to allItem.category,
@@ -41,7 +41,7 @@ class DataRepositoryImpl @Inject constructor(
                 "description" to allItem.description,
 
                 )
-            itemData.add(furnitureItem).await()
+            itemData.add(usedItem).await()
             Result.success(Unit)
 
         } catch (e: Exception) {
@@ -65,7 +65,7 @@ class DataRepositoryImpl @Inject constructor(
             }
 
 
-            val furnitureItem = mapOf(
+            val usedItem = mapOf(
                 "imageUrl" to downloadUrl,
                 "name" to allItem.name,
                 "category" to allItem.category,
@@ -75,7 +75,7 @@ class DataRepositoryImpl @Inject constructor(
                 "description" to allItem.description,
 
             )
-            allItem.itemId?.let { itemData.document(it).update(furnitureItem).await() }
+            allItem.itemId?.let { itemData.document(it).update(usedItem).await() }
             Result.success(Unit)
 
         } catch (e: Exception) {

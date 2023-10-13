@@ -33,7 +33,7 @@
         <activity
             android:name=".HomeActivity"
             android:exported="false"
-            android:windowSoftInputMode="adjustResize" />
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".cameraX.MyCameraActivity"
             android:enableOnBackInvokedCallback="true"
