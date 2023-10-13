@@ -1,11 +1,15 @@
 package com.example.reusemarket.views.login
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.content.IntentSender
 import android.os.Bundle
 import android.util.Log
+import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
+import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -20,6 +24,7 @@ import com.google.android.gms.auth.api.identity.BeginSignInRequest
 import com.google.android.gms.auth.api.identity.Identity
 import com.google.android.gms.auth.api.identity.SignInClient
 import com.google.android.gms.common.api.ApiException
+import com.google.android.material.internal.ViewUtils.hideKeyboard
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -29,22 +34,27 @@ class MainActivity : AppCompatActivity() {
     private var oneTapClient: SignInClient? = null
     private var signInRequest: BeginSignInRequest? = null
 
-    private val myActivityResultLauncher =
+   /* private val myActivityResultLauncher =
         registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) { result ->
 
             if (result.resultCode == Activity.RESULT_OK) {
                 try {
                     val credential = oneTapClient!!.getSignInCredentialFromIntent(result.data)
                     viewModel.signInWithGoogle(credential)
-                    navigateToHomeActivity()
 
                 } catch (e: ApiException) {
-                    TODO("Exception handling")
+                    showError("Google sign-in failed: ${e.message}")
                 }
             } else {
                 // Result was not successful, handle the failure
             }
+        }*/
+
+    private val myActivityResultLauncher =
+        registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) { result ->
+            handleGoogleSignInResult(result)
         }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,10 +64,28 @@ class MainActivity : AppCompatActivity() {
         viewModel = ViewModelProvider(this)[AuthViewModel::class.java]
         binding.lifecycleOwner = this
 
+        binding.etPassword.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_NEXT) {
+                // Hide the keyboard
+                hideKeyboard()
+                return@setOnEditorActionListener true
+            }
+            false
+        }
+
+        binding.root.setOnClickListener {
+            hideKeyboard()
+        }
+
         checkAlreadyLoginUser()
 
         setupUI()
         googleSignIn()
+    }
+
+    private fun hideKeyboard() {
+        val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.hideSoftInputFromWindow(currentFocus?.windowToken, 0)
     }
 
     private fun checkAlreadyLoginUser() {
@@ -92,29 +120,43 @@ class MainActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            viewModel.signIn(email, password)
-
-            viewModel.signIn.observe(this) {
-                when (it) {
-                    is UIState.Loading -> {
-                        showProgress(true)
-                    }
-
-                    is UIState.Success<*> -> {
-                        showProgress(false)
-                        navigateToHomeActivity()
-                    }
-
-                    is UIState.Failure -> {
-                        showProgress(false)
-                        showError(it.error)
-                    }
+            binding.etEmail.setOnEditorActionListener { _, actionId, _ ->
+                if (actionId == EditorInfo.IME_ACTION_NEXT) {
+                    binding.etPassword.requestFocus() // Move focus to the next EditText
+                    true
+                } else {
+                    false
                 }
             }
+
+            viewModel.signIn(email, password)
+            observeSignInState()
         }
 
         binding.btnSignupGoogle.setOnClickListener {
             initiateGoogleSignIn()
+            observeSignInState()
+
+        }
+    }
+
+    private fun observeSignInState() {
+        viewModel.signIn.observe(this) {
+            when (it) {
+                is UIState.Loading -> {
+                    showProgress(true)
+                }
+
+                is UIState.Success<*> -> {
+                    showProgress(false)
+                    navigateToHomeActivity()
+                }
+
+                is UIState.Failure -> {
+                    showProgress(false)
+                    showError(it.error)
+                }
+            }
         }
     }
 
@@ -164,8 +206,24 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
                 .addOnFailureListener { e ->
+
                     Log.e(TAG, "Google sign-in failed: ${e.localizedMessage}")
+                    showError("Google sign-in failed: ${e.localizedMessage}")
+
                 }
+        }
+    }
+    private fun handleGoogleSignInResult(result: ActivityResult) {
+        if (result.resultCode == Activity.RESULT_OK) {
+            try {
+                val credential = oneTapClient!!.getSignInCredentialFromIntent(result.data)
+                viewModel.signInWithGoogle(credential)
+            } catch (e: ApiException) {
+                showError("Google sign-in failed: ${e.message}")
+            }
+        } else {
+            showError("Google sign-in was canceled or failed. Please try again.")
+
         }
     }
 

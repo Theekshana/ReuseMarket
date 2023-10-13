@@ -16,5 +16,7 @@
     <color name="your_primary_color">#FF5722</color>
     <color name="your_primary_dark_color">#E64A19</color>
     <color name="your_accent_color">#FFC107</color>
+    <color name="transparent">#80C0B1B1</color>
+
 
 </resources>

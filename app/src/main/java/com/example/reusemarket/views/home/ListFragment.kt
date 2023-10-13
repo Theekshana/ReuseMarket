@@ -12,13 +12,10 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.reusemarket.R
-import com.example.reusemarket.adapters.AllItemAdapter
 import com.example.reusemarket.constants.UIState
 import com.example.reusemarket.databinding.FragmentListBinding
 import com.example.reusemarket.model.AllItem
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
 
 
 class ListFragment : Fragment(), AllItemAdapter.OnItemClickedListener  {
@@ -55,13 +52,14 @@ class ListFragment : Fragment(), AllItemAdapter.OnItemClickedListener  {
                 val lastVisibleItemPosition = layoutManager.findLastCompletelyVisibleItemPosition()
                 val totalItemCount = layoutManager.itemCount
                 // Adjust this threshold as needed; it determines when to hide/show the BottomNavigationView
-                val threshold = 1
 
-                showOrHideBottomNavigation(totalItemCount - lastVisibleItemPosition > threshold)
+                if (totalItemCount > totalItemCount + 1){
+                    showOrHideBottomNavigation(totalItemCount - lastVisibleItemPosition > totalItemCount)
+                }
+
             }
         })
     }
-
 
     private fun showOrHideBottomNavigation(show: Boolean) {
         val bottomNav: BottomNavigationView =

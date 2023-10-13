@@ -7,8 +7,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fitsSystemWindows="true"
+        android:background="@color/transparent"
         tools:context=".views.login">
-
 
         <View
             android:id="@+id/topView"
@@ -21,12 +21,14 @@
 
         <View
             android:id="@+id/waveView"
-            android:layout_width="0dp"
-            android:layout_height="100dp"
-            android:background="@drawable/wave"
+            android:layout_width="228dp"
+            android:layout_height="220dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/ic_background"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/topView" />
+            app:layout_constraintTop_toBottomOf="@+id/btnSignupWithEmail" />
 
         <TextView
             android:id="@+id/textView"
@@ -36,7 +38,7 @@
             android:layout_marginTop="52dp"
             android:fontFamily="serif"
             android:text="@string/text_login"
-            android:textSize="50sp"
+            android:textSize="@dimen/extra_large"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -48,6 +50,7 @@
             android:layout_marginTop="32dp"
             android:layout_marginEnd="@dimen/margin_end"
             android:hint="@string/email"
+            app:boxStrokeWidth="5dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView">
@@ -57,6 +60,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textEmailAddress"
+                android:fontFamily="@font/aclonica"
+                android:imeOptions="actionNext"
                 android:textColorHint="#546E7A"
                 tools:ignore="VisualLintTextFieldSize,TextContrastCheck" />
 
@@ -70,6 +75,7 @@
             android:layout_marginTop="24dp"
             android:layout_marginEnd="@dimen/margin_end"
             android:hint="@string/Password"
+            app:boxStrokeWidth="5dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
@@ -80,6 +86,7 @@
                 android:id="@+id/etPassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/aclonica"
                 android:inputType="textPassword"
                 android:textColorHint="#546E7A"
                 tools:ignore="VisualLintTextFieldSize,TextContrastCheck" />
@@ -87,21 +94,22 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
+
         <Button
             android:id="@+id/btnLogin"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_start"
-            android:layout_marginTop="64dp"
+            android:layout_marginTop="32dp"
             android:layout_marginEnd="@dimen/margin_end"
             android:background="@drawable/round_bg"
+            android:fontFamily="@font/aclonica"
             android:text="@string/btn_login"
             android:textSize="@dimen/text_large"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/ipPassword" />
-
 
         <TextView
             android:id="@+id/txtError"
@@ -121,6 +129,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:text="or"
+            android:textSize="@dimen/text_large"
+            android:fontFamily="@font/aclonica"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/txtError" />
@@ -132,6 +142,7 @@
             android:layout_marginStart="@dimen/margin_start"
             android:layout_marginTop="@dimen/button_margin_top"
             android:layout_marginEnd="@dimen/margin_end"
+            android:fontFamily="@font/aclonica"
             android:background="@drawable/round_bg"
             android:text="@string/sign_up_with_google"
             android:textSize="@dimen/text_large"
@@ -149,21 +160,23 @@
             android:background="@drawable/round_bg"
             android:text="@string/sign_up_with_email"
             android:textSize="@dimen/text_large"
+            android:fontFamily="@font/aclonica"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/btnSignupGoogle" />
-
 
         <ProgressBar
             android:id="@+id/progressBar"
             style="?android:attr/progressBarStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="52dp"
             android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btnSignupGoogle" />
+            app:layout_constraintTop_toBottomOf="@+id/btnSignupWithEmail" />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -1,4 +1,4 @@
-package com.example.reusemarket.adapters
+package com.example.reusemarket.views.user
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

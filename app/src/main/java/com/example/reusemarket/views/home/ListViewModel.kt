@@ -47,10 +47,5 @@ class ListViewModel @Inject constructor(
 
     }
 
-    /*fun signOut() {
-        repository.deleteUser()
-        repository.signOut()
-
-    }*/
 
 }

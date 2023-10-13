@@ -32,6 +32,7 @@
     <string name="take_photo">Take Photo</string>
     <string name="select">Select</string>
     <string name="logout">logout</string>
+    <string name="sign_up">SIGN UP</string>
 
     <string-array name="categories">
         <item>Furniture</item>

@@ -20,7 +20,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.reusemarket.R
-import com.example.reusemarket.adapters.UserItemAdapter
 import com.example.reusemarket.constants.UIState
 import com.example.reusemarket.constants.showAlertYeNo
 import com.example.reusemarket.databinding.FragmentUserBinding
@@ -83,12 +82,8 @@ class UserFragment : Fragment(), UserItemAdapter.OnDeleteClicked, UserItemAdapte
                 val layoutManager = recyclerView.layoutManager as LinearLayoutManager
                 val lastVisibleItemPosition = layoutManager.findLastCompletelyVisibleItemPosition()
                 val totalItemCount = layoutManager.itemCount
-                // Adjust this threshold as needed; it determines when to hide/show the BottomNavigationView
-
-                if (totalItemCount > 9){
-                    val threshold = 1
-
-                    showOrHideBottomNavigation(totalItemCount - lastVisibleItemPosition > threshold)
+                if (totalItemCount > totalItemCount + 1){
+                    showOrHideBottomNavigation(totalItemCount - lastVisibleItemPosition > totalItemCount)
                 }
 
             }

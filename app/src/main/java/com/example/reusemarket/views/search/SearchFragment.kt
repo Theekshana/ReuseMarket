@@ -12,7 +12,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.reusemarket.R
-import com.example.reusemarket.adapters.SearchItemAdapter
 import com.example.reusemarket.constants.UIState
 import com.example.reusemarket.constants.hide
 import com.example.reusemarket.constants.show
