@@ -12,6 +12,9 @@ import kotlinx.coroutines.launch
 import java.util.Locale
 import javax.inject.Inject
 
+/**
+ * ViewModel responsible for handling item search functionality.
+ */
 @HiltViewModel
 class SearchViewModel @Inject constructor(
     private val repository: DataRepositoryImpl,
@@ -22,7 +25,6 @@ class SearchViewModel @Inject constructor(
     val marketItemList = MutableLiveData<List<AllItem>>()
     val dateListState: LiveData<UIState>
         get() = _dataListState
-
 
     fun searchItems(searchItem: String) {
         viewModelScope.launch {

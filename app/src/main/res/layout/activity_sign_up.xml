@@ -35,7 +35,7 @@
             android:layout_marginStart="44dp"
             android:layout_marginTop="52dp"
             android:fontFamily="serif"
-            android:text="sign_up"
+            android:text="sign up"
             android:textSize="50sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

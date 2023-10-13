@@ -18,11 +18,9 @@ class UserItemAdapter(
         fun onEditItemClicked(allItem: AllItem)
     }
 
-
     interface OnDeleteClicked {
         fun onDeleteItemClicked(allItem: AllItem)
     }
-
 
     inner class UserItemViewHolder(val binding: UserItemListBinding) :
         RecyclerView.ViewHolder(binding.root)
@@ -48,7 +46,7 @@ class UserItemAdapter(
                 .load(imageUrl)
                 .into(holder.binding.itemImage)
 
-       }
+        }
         holder.binding.delete.setOnClickListener {
             onDeleteClicked?.onDeleteItemClicked(currentItem)
         }

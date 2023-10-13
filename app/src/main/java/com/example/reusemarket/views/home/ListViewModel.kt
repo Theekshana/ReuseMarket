@@ -12,6 +12,11 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+/**
+ * ViewModel for managing the list of items displayed in the [ListFragment].
+ *
+ * @param repository The repository responsible for data operations.
+ */
 @HiltViewModel
 class ListViewModel @Inject constructor(
     private val repository: DataRepositoryImpl,

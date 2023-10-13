@@ -5,22 +5,25 @@ import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
+/**
+ * Implementation of the [AuthRepository] interface for handling authentication operations.
+ *
+ * @param firebaseAuth An instance of [FirebaseAuth] used for authentication operations.
+ */
 class AuthRepositoryImpl @Inject constructor(
-    private val firebaseAuth: FirebaseAuth
+    private val firebaseAuth: FirebaseAuth,
 ) : AuthRepository {
     override suspend fun signIn(email: String, password: String): Task<AuthResult> {
-        return  firebaseAuth.signInWithEmailAndPassword(email, password)
+        return firebaseAuth.signInWithEmailAndPassword(email, password)
     }
 
     override suspend fun signUp(
         email: String,
         password: String,
     ): Task<AuthResult> {
-        return  firebaseAuth.createUserWithEmailAndPassword(email, password)
+        return firebaseAuth.createUserWithEmailAndPassword(email, password)
 
     }
 
@@ -35,7 +38,6 @@ class AuthRepositoryImpl @Inject constructor(
     override fun signOut() {
         firebaseAuth.signOut()
     }
-
 
 
 }

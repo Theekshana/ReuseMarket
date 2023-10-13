@@ -29,7 +29,9 @@ import com.example.reusemarket.databinding.ImageCaptureBottomSheetBinding
 import com.example.reusemarket.model.AllItem
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
-
+/**
+ * A fragment for adding a new item or editing an existing one.
+ */
 class AddItemFragment : Fragment() {
 
     private lateinit var binding: FragmentAddItemBinding
@@ -93,8 +95,7 @@ class AddItemFragment : Fragment() {
                 disableEnableControls(true, binding.addItemLayout)
                 binding.btnAddItem.isEnabled = true
                 binding.progressBar.gone()
-                navigateToUserProfile()
-                // clearTextFields()
+               // fillData()
 
             }
 
@@ -124,7 +125,6 @@ class AddItemFragment : Fragment() {
                 requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.hideSoftInputFromWindow(view.windowToken, 0)
 
-
             if (validateFields()) {
                 val name = binding.etItemName.text.toString()
                 val location = binding.etLocation.text.toString()
@@ -151,7 +151,6 @@ class AddItemFragment : Fragment() {
                 Log.e("TAG", "Data Added")
 
             }
-
             //goToNextInput
             binding.etItemName.setOnEditorActionListener { _, actionId, _ ->
                 if (actionId == EditorInfo.IME_ACTION_NEXT) {
@@ -179,7 +178,7 @@ class AddItemFragment : Fragment() {
                     false
                 }
             }
-            binding.etPhoneNumber.setOnEditorActionListener { v, actionId, event ->
+            binding.etPhoneNumber.setOnEditorActionListener { _, actionId, _ ->
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
                     binding.etDescription.requestFocus() // Move focus to the last EditText
 
@@ -202,21 +201,20 @@ class AddItemFragment : Fragment() {
 
         }
 
-
     }
 
-
-    private fun navigateToUserProfile() {
-        findNavController().navigate(R.id.userFragment)
-    }
-
-    /*private fun clearTextFields() {
+    private fun clearTextFields() {
         binding.etItemName.text?.clear()
         binding.autoCompleteTextView.text?.clear()
         binding.etLocation.text?.clear()
         binding.etPhoneNumber.text?.clear()
         binding.etDescription.text?.clear()
-    }*/
+    }
+
+    private fun navigateToUserProfile() {
+        findNavController().navigate(R.id.userFragment)
+    }
+
     private fun validateFields(): Boolean {
         if (imageUri?.toString().isNullOrEmpty() && item.image_url.isNullOrEmpty()) {
             Toast.makeText(requireContext(), "Please select an image first", Toast.LENGTH_LONG)
@@ -254,7 +252,9 @@ class AddItemFragment : Fragment() {
     private fun fillData() {
         binding.etItemName.setText(item.name)
         binding.autoCompleteTextView.setText(item.category)
-
+        binding.etLocation.setText(item.location)
+        binding.etPhoneNumber.setText(item.phoneNumber)
+        binding.etDescription.setText(item.description)
         Glide.with(this)
             .load(item.image_url)
             .into(binding.itemImageView)
@@ -312,10 +312,8 @@ class AddItemFragment : Fragment() {
             .load(imageUri)
             .into(binding.itemImageView)
         binding.imageButton.visibility = View.GONE
-
         // Save the selected image URI in a property for later use
         this.imageUri = imageUri
     }
-
 
 }

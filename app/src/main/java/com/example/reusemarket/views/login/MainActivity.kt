@@ -10,7 +10,6 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.activity.result.ActivityResult
-import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -24,37 +23,23 @@ import com.google.android.gms.auth.api.identity.BeginSignInRequest
 import com.google.android.gms.auth.api.identity.Identity
 import com.google.android.gms.auth.api.identity.SignInClient
 import com.google.android.gms.common.api.ApiException
-import com.google.android.material.internal.ViewUtils.hideKeyboard
 import dagger.hilt.android.AndroidEntryPoint
 
+/**
+ * The main activity responsible for user authentication and sign-in operations.
+ */
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
+
     private lateinit var binding: ActivityMainBinding
     private lateinit var viewModel: AuthViewModel
     private var oneTapClient: SignInClient? = null
     private var signInRequest: BeginSignInRequest? = null
 
-   /* private val myActivityResultLauncher =
-        registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) { result ->
-
-            if (result.resultCode == Activity.RESULT_OK) {
-                try {
-                    val credential = oneTapClient!!.getSignInCredentialFromIntent(result.data)
-                    viewModel.signInWithGoogle(credential)
-
-                } catch (e: ApiException) {
-                    showError("Google sign-in failed: ${e.message}")
-                }
-            } else {
-                // Result was not successful, handle the failure
-            }
-        }*/
-
     private val myActivityResultLauncher =
         registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) { result ->
             handleGoogleSignInResult(result)
         }
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -84,7 +69,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun hideKeyboard() {
-        val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        val inputMethodManager =
+            getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         inputMethodManager.hideSoftInputFromWindow(currentFocus?.windowToken, 0)
     }
 
@@ -213,6 +199,7 @@ class MainActivity : AppCompatActivity() {
                 }
         }
     }
+
     private fun handleGoogleSignInResult(result: ActivityResult) {
         if (result.resultCode == Activity.RESULT_OK) {
             try {

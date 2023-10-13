@@ -11,6 +11,11 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+/**
+ * ViewModel for managing user authentication and sign-in operations.
+ *
+ * @param repository The repository responsible for authentication.
+ */
 @HiltViewModel
 class AuthViewModel @Inject constructor(
     private val repository: AuthRepositoryImpl,

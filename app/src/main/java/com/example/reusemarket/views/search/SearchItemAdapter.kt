@@ -16,11 +16,8 @@ class SearchItemAdapter(private val list: List<AllItem>) :
         fun onItemClicked(item: AllItem)
     }
 
-
     inner class SearchItemViewHolder(val binding: SearchItemBinding) :
-        RecyclerView.ViewHolder(binding.root) {
-
-    }
+        RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchItemViewHolder {
         val itemView =

@@ -11,6 +11,9 @@ import com.bumptech.glide.Glide
 import com.example.reusemarket.databinding.FragmentViewItemBinding
 import com.example.reusemarket.model.AllItem
 
+/**
+ * Fragment responsible for displaying details of a selected item.
+ */
 class ViewItemFragment : Fragment() {
 
     private var item: AllItem? = null
@@ -53,10 +56,11 @@ class ViewItemFragment : Fragment() {
             }
             fragmentViewItemBinding.imgEmail.setOnClickListener {
 
-                item.name?.let { it1 ->
+                item.name?.let { itemName ->
                     sendEmail(
                         item.email.orEmpty(),
-                        it1, "Can I buy this item"
+                        itemName, "I want this $itemName Please provide more details."
+
                     )
                 }
 
@@ -69,7 +73,7 @@ class ViewItemFragment : Fragment() {
         emailIntent.putExtra(Intent.EXTRA_EMAIL, arrayOf(email))
         emailIntent.putExtra(Intent.EXTRA_SUBJECT, subject)
         emailIntent.putExtra(Intent.EXTRA_TEXT, message)
-        emailIntent.type = "message/rfc822"
+        emailIntent.type = "message/rfnec822"
         startActivity(Intent.createChooser(emailIntent, "Choose an Email client :"))
     }
 
@@ -78,6 +82,5 @@ class ViewItemFragment : Fragment() {
         dialIntent.data = Uri.parse("tel:$number")
         startActivity(dialIntent)
     }
-
 
 }

@@ -11,6 +11,9 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+/**
+ * ViewModel for managing item addition and editing operations.
+ */
 @HiltViewModel
 class AddItemViewModel @Inject constructor(
     private val repository: DataRepositoryImpl,
@@ -26,7 +29,6 @@ class AddItemViewModel @Inject constructor(
         get() = _toastMessage
 
 
-
     fun addItemToFirestore(allItem: AllItem) {
         _loadingState.value = true
         allItem.email = repositoryAuth.getCurrentUser()?.email ?: ""
@@ -36,7 +38,7 @@ class AddItemViewModel @Inject constructor(
             _loadingState.value = false
 
             if (response.isSuccess) {
-                _toastMessage.value = "Data added successfully!"
+                _toastMessage.value = "Item added successfully!"
 
             } else {
 
@@ -56,7 +58,7 @@ class AddItemViewModel @Inject constructor(
             _loadingState.value = false
 
             if (response.isSuccess) {
-                _toastMessage.value = "Data added successfully!"
+                _toastMessage.value = "Item updated successfully!"
             } else {
                 _toastMessage.value = "Error adding data!"
             }

@@ -30,17 +30,15 @@ object FirebaseModule {
      */
     @Provides
     @Singleton
-    fun provideFirestoreInstances(): FirebaseFirestore{
+    fun provideFirestoreInstances(): FirebaseFirestore {
         return FirebaseFirestore.getInstance()
     }
 
     @Provides
     @Singleton
-    fun provideFirebaseStorage(): FirebaseStorage{
+    fun provideFirebaseStorage(): FirebaseStorage {
         return FirebaseStorage.getInstance()
     }
-
-
 
 
 }

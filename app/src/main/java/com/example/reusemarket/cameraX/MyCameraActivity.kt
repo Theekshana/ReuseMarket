@@ -29,8 +29,10 @@ import com.example.reusemarket.databinding.ActivityMyCameraBinding
 import java.text.SimpleDateFormat
 import java.util.Locale
 
+/**
+ * An activity for capturing images using the CameraX library.
+ */
 class MyCameraActivity : AppCompatActivity() {
-
     companion object {
         private const val TAG = "CameraXApp"
         private const val FILENAME_FORMAT = "yyyy-MM-dd-HH-mm-ss-SSS"
@@ -69,7 +71,6 @@ class MyCameraActivity : AppCompatActivity() {
     private lateinit var viewBinding: ActivityMyCameraBinding
 
     private var imageCapture: ImageCapture? = null
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewBinding = ActivityMyCameraBinding.inflate(layoutInflater)
@@ -123,9 +124,6 @@ class MyCameraActivity : AppCompatActivity() {
 
                 override fun
                         onImageSaved(output: ImageCapture.OutputFileResults) {
-                    val msg = "Photo capture succeeded: ${output.savedUri}"
-                    Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
-                    Log.d(TAG, msg)
                     setResult(Activity.RESULT_OK, Intent().setData(output.savedUri))
                     finish()
                 }
