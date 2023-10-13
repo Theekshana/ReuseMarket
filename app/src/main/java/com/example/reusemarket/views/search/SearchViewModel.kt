@@ -9,8 +9,12 @@ import com.example.reusemarket.model.AllItem
 import com.example.reusemarket.repository.DataRepositoryImpl
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import java.util.Locale
 import javax.inject.Inject
 
+/**
+ * ViewModel responsible for handling item search functionality.
+ */
 @HiltViewModel
 class SearchViewModel @Inject constructor(
     private val repository: DataRepositoryImpl,
@@ -22,41 +26,40 @@ class SearchViewModel @Inject constructor(
     val dateListState: LiveData<UIState>
         get() = _dataListState
 
-
     fun searchItems(searchItem: String) {
-
         viewModelScope.launch {
             _dataListState.postValue(UIState.Loading)
             marketItemList.postValue(emptyList())
-            if (searchItem.isNullOrEmpty()) {
+
+            if (searchItem.isEmpty()) {
                 _dataListState.postValue(UIState.Success<List<AllItem>>(emptyList()))
                 return@launch
-
             }
-            searchItem.let { searchItem ->
-                repository.searchItems(searchItem).addOnSuccessListener { it ->
-                    val userList = ArrayList<AllItem>()
-                    for (data in it.documents) {
-                        val item: AllItem? = data.toObject(AllItem::class.java)
-                        if (item != null) {
-                            item.itemId = data.id
+
+            val searchItems = searchItem.lowercase(Locale.ROOT) // Convert search text to lowercase
+
+            repository.searchItems(searchItems).addOnSuccessListener {
+                val itemList = ArrayList<AllItem>()
+
+                for (data in it.documents) {
+                    val item: AllItem? = data.toObject(AllItem::class.java)
+                    if (item != null) {
+                        item.itemId = data.id
+                        val itemName =
+                            item.name?.lowercase(Locale.ROOT) // Convert item name to lowercase
+                        // Check if the lowercase item name contains the lowercase search text
+                        if (itemName != null && itemName.contains(searchItems)) {
+                            itemList.add(item)
                         }
-                        item?.let { userList.add(it) }
                     }
-
-                        marketItemList.postValue(userList)
-                        _dataListState.postValue(UIState.Success<List<AllItem>>(userList))
-
-                }.addOnFailureListener {
-                    _dataListState.postValue(UIState.Failure("Failed getting data"))
                 }
 
+                marketItemList.postValue(itemList)
+                _dataListState.postValue(UIState.Success<List<AllItem>>(itemList))
+            }.addOnFailureListener {
+                _dataListState.postValue(UIState.Failure("Failed getting data"))
             }
         }
-
-
     }
-
-
 
 }

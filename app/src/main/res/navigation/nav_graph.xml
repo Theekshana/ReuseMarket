@@ -26,6 +26,9 @@
         <action
             android:id="@+id/action_userFragment_to_addItemFragment"
             app:destination="@id/addItemFragment" />
+        <action
+            android:id="@+id/action_userFragment_to_addItemFragment2"
+            app:destination="@id/addItemFragment" />
     </fragment>
     <fragment
         android:id="@+id/searchFragment"

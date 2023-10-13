@@ -4,6 +4,9 @@ import android.net.Uri
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
+/**
+ * Data class representing an item.
+ */
 @Parcelize
 data class AllItem(
     var itemId: String? = null,
@@ -14,6 +17,6 @@ data class AllItem(
     var email: String? = null,
     var location: String? = null,
     var phoneNumber: String? = null,
-    var description: String? = null
+    var description: String? = null,
 
-): Parcelable
+    ) : Parcelable

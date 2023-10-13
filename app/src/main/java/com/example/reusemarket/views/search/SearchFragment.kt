@@ -12,7 +12,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.reusemarket.R
-import com.example.reusemarket.adapters.SearchItemAdapter
 import com.example.reusemarket.constants.UIState
 import com.example.reusemarket.constants.hide
 import com.example.reusemarket.constants.show
@@ -24,7 +23,9 @@ import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-
+/**
+ * A Fragment for searching items based on user input.
+ */
 class SearchFragment : Fragment(), SearchItemAdapter.OnItemClickedListener {
 
     private val debouncePeriod = 500L // 500 milliseconds debounce time
@@ -52,7 +53,6 @@ class SearchFragment : Fragment(), SearchItemAdapter.OnItemClickedListener {
         override fun afterTextChanged(s: Editable?) {
             // Cancel any existing debounce job
             scope.coroutineContext.cancelChildren()
-
             // Launch a new debounce job
             scope.launch {
                 delay(debouncePeriod)
@@ -86,7 +86,6 @@ class SearchFragment : Fragment(), SearchItemAdapter.OnItemClickedListener {
 
                 is UIState.Success<*> -> {
                     binding.progressBar.hide()
-
                     val myRecyclerViewAdapter =
                         SearchItemAdapter(viewModel.marketItemList.value ?: emptyList())
                     myRecyclerViewAdapter.onItemClickedListener = this
@@ -102,6 +101,5 @@ class SearchFragment : Fragment(), SearchItemAdapter.OnItemClickedListener {
             args = bundleOf("item" to item)
         )
     }
-
 
 }

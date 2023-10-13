@@ -5,14 +5,9 @@ import android.content.DialogInterface
 import android.view.View
 import androidx.appcompat.app.AlertDialog
 
-
-object FirestoreTables{
-val DATA = "data"
-}
-
-const val PREF_USER = "USER"
-const val REQ_ONE_TAP = 1000
-
+/**
+ * Extension function to set the visibility of a View to VISIBLE.
+ */
 fun View.show() {
     visibility = View.VISIBLE
 }
@@ -25,9 +20,12 @@ fun View.hide() {
     visibility = View.INVISIBLE
 }
 
+/**
+ * Display an alert dialog with Yes and No options.
+ */
 fun Context.showAlertYeNo(
     title: String, message: String, positiveClick: () -> Unit,
-    negativeClick: (() -> Unit)? = null
+    negativeClick: (() -> Unit)? = null,
 ) {
     val alertDialog = AlertDialog.Builder(this)
     alertDialog.apply {

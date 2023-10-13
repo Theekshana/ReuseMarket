@@ -18,15 +18,11 @@ class UserViewModel @Inject constructor(
     private val repositoryAuth: AuthRepositoryImpl,
 ) : ViewModel() {
 
-
     private val _dataListState = MutableLiveData<UIState>()
     val marketItemList = MutableLiveData<List<AllItem>>()
     private val _dataDeleteState = MutableLiveData<UIState>()
     val dateListState: LiveData<UIState>
         get() = _dataListState
-
-    val dateDeleteState: LiveData<UIState>
-        get() = _dataDeleteState
 
     fun fetchPostedItems() {
         viewModelScope.launch {

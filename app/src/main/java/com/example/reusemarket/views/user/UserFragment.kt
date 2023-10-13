@@ -20,8 +20,9 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.reusemarket.R
-import com.example.reusemarket.adapters.UserItemAdapter
 import com.example.reusemarket.constants.UIState
+import com.example.reusemarket.constants.hide
+import com.example.reusemarket.constants.show
 import com.example.reusemarket.constants.showAlertYeNo
 import com.example.reusemarket.databinding.FragmentUserBinding
 import com.example.reusemarket.model.AllItem
@@ -29,7 +30,10 @@ import com.example.reusemarket.views.login.MainActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
-
+/**
+ * A fragment that displays user-specific content, such as user items.
+ * Allows users to navigate to add new items, view details, and perform actions like editing or deleting items.
+ */
 class UserFragment : Fragment(), UserItemAdapter.OnDeleteClicked, UserItemAdapter.OnEditClicked {
 
     private lateinit var viewModel: UserViewModel
@@ -45,6 +49,7 @@ class UserFragment : Fragment(), UserItemAdapter.OnDeleteClicked, UserItemAdapte
         // Inflate the layout for this fragment
         viewModel = ViewModelProvider(requireActivity())[UserViewModel::class.java]
         binding = FragmentUserBinding.inflate(inflater, container, false)
+
 
         fabButton = binding.btnAdd
 
@@ -76,15 +81,16 @@ class UserFragment : Fragment(), UserItemAdapter.OnDeleteClicked, UserItemAdapte
 
     private fun setupScrollListener() {
         binding.rvUserItem.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                super.onScrollStateChanged(recyclerView, newState)
-                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                    showOrHideBottomNavigation(true)
-                    fabButton.show()
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
 
-                } else {
-                    showOrHideBottomNavigation(false)
+                val layoutManager = recyclerView.layoutManager as LinearLayoutManager
+                val lastVisibleItemPosition = layoutManager.findLastCompletelyVisibleItemPosition()
+                val totalItemCount = layoutManager.itemCount
+                if (totalItemCount > totalItemCount + 1) {
+                    showOrHideBottomNavigation(totalItemCount - lastVisibleItemPosition > totalItemCount)
                 }
+
             }
         })
     }
@@ -131,21 +137,16 @@ class UserFragment : Fragment(), UserItemAdapter.OnDeleteClicked, UserItemAdapte
         viewModel.dateListState.observe(viewLifecycleOwner) {
             when (it) {
                 is UIState.Failure -> {
-
+                    binding.progressBar.hide()
                     Toast.makeText(requireContext(), it.toString(), Toast.LENGTH_LONG).show()
                 }
 
                 UIState.Loading -> {
-
+                    binding.progressBar.show()
                 }
 
                 is UIState.Success<*> -> {
-
-                    Toast.makeText(
-                        requireContext(),
-                        "Number of documents retrieved: ${viewModel.marketItemList.value?.size}",
-                        Toast.LENGTH_LONG
-                    ).show()
+                    binding.progressBar.hide()
                     val myRecyclerViewAdapter =
                         UserItemAdapter(
                             (viewModel.marketItemList.value ?: emptyList()) as ArrayList<AllItem>

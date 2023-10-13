@@ -11,17 +11,23 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.reusemarket.HomeActivity
 import com.example.reusemarket.R
-import com.example.reusemarket.adapters.AllItemAdapter
 import com.example.reusemarket.constants.UIState
+import com.example.reusemarket.constants.hide
+import com.example.reusemarket.constants.show
 import com.example.reusemarket.databinding.FragmentListBinding
 import com.example.reusemarket.model.AllItem
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
 
-
-class ListFragment : Fragment(), AllItemAdapter.OnItemClickedListener  {
+/**
+ * Fragment for displaying a list of items.
+ *
+ * This fragment displays a list of items and allows users to click on an item to view its details.
+ *
+ * @constructor Creates an instance of [ListFragment].
+ */
+class ListFragment : Fragment(), AllItemAdapter.OnItemClickedListener {
 
     lateinit var binding: FragmentListBinding
     private lateinit var viewModel: ListViewModel
@@ -31,13 +37,12 @@ class ListFragment : Fragment(), AllItemAdapter.OnItemClickedListener  {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View? {
-        // Inflate the layout for this fragment
-        // return inflater.inflate(R.layout.fragment_list, container, false)
-
         binding = FragmentListBinding.inflate(inflater, container, false)
 
-
         viewModel = ViewModelProvider(requireActivity())[ListViewModel::class.java]
+
+        (requireActivity() as HomeActivity).findViewById<View>(R.id.bottomNavigationView)?.visibility =
+            View.VISIBLE
 
         setupScrollListener()
 
@@ -46,15 +51,20 @@ class ListFragment : Fragment(), AllItemAdapter.OnItemClickedListener  {
         return binding.root
     }
 
+
     private fun setupScrollListener() {
         binding.rvAllItem.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                super.onScrollStateChanged(recyclerView, newState)
-                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                    showOrHideBottomNavigation(true)
-                } else {
-                    showOrHideBottomNavigation(false)
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+
+                val layoutManager = recyclerView.layoutManager as LinearLayoutManager
+                val lastVisibleItemPosition = layoutManager.findLastCompletelyVisibleItemPosition()
+                val totalItemCount = layoutManager.itemCount
+
+                if (totalItemCount > totalItemCount + 1) {
+                    showOrHideBottomNavigation(totalItemCount - lastVisibleItemPosition > totalItemCount)
                 }
+
             }
         })
     }
@@ -76,25 +86,19 @@ class ListFragment : Fragment(), AllItemAdapter.OnItemClickedListener  {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
         viewModel.dateListState.observe(viewLifecycleOwner) {
             when (it) {
                 is UIState.Failure -> {
-
+                    binding.progressBar.hide()
                     Toast.makeText(requireContext(), it.toString(), Toast.LENGTH_LONG).show()
                 }
 
                 UIState.Loading -> {
-
+                    binding.progressBar.show()
                 }
 
                 is UIState.Success<*> -> {
-                    //binding.progressBar.hide()
-                    Toast.makeText(
-                        requireContext(),
-                        "Number of documents retrieved: ${viewModel.marketItemList.value?.size}",
-                        Toast.LENGTH_LONG
-                    ).show()
+                    binding.progressBar.hide()
                     val myRecyclerViewAdapter =
                         AllItemAdapter(
                             (viewModel.marketItemList.value ?: emptyList()) as ArrayList<AllItem>
@@ -105,13 +109,6 @@ class ListFragment : Fragment(), AllItemAdapter.OnItemClickedListener  {
             }
         }
         viewModel.fetchAllItems()
-
-        /*binding.button.setOnClickListener {
-     viewModel.signOut()
-
-
- }*/
-
 
     }
 

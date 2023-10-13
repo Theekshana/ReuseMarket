@@ -3,16 +3,12 @@ package com.example.reusemarket
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import com.example.reusemarket.databinding.ActivityHomeBinding
-import com.example.reusemarket.views.home.ListFragment
-import com.example.reusemarket.views.search.SearchFragment
-import com.example.reusemarket.views.user.UserFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -22,12 +18,11 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var navController: NavController
     lateinit var binding: ActivityHomeBinding
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         //setContentView(R.layout.activity_home)
         // Inflate the layout for this fragment
-        binding = DataBindingUtil.setContentView(this,R.layout.activity_home)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_home)
         setContentView(binding.root)
 
         val navHostFragment =
@@ -43,16 +38,20 @@ class HomeActivity : AppCompatActivity() {
                     navController.navigate(R.id.listFragment)
                     true
                 }
+
                 R.id.miSearch -> {
                     navController.navigate(R.id.searchFragment)
                     true
                 }
+
                 R.id.miUser -> {
                     navController.navigate(R.id.userFragment)
                     true
                 }
 
-                else -> {true}
+                else -> {
+                    true
+                }
             }
         }
     }

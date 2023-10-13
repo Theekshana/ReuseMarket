@@ -41,6 +41,7 @@
                 android:layout_height="match_parent"
                 android:background="@android:color/transparent"
                 android:hint="@string/search"
+                android:fontFamily="@font/aclonica"
                 android:imeOptions="actionSearch"
                 android:inputType="text"
                 android:textSize="@dimen/search_view_text_size" />

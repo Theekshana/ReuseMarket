@@ -1,7 +1,6 @@
 <resources>
     <string name="app_name">ReuseMarket</string>
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="web_client_id">"739688854802-n3hbku3ckqctubkmjgk0q2cfpiksdbqd.apps.googleusercontent.com"</string>
     <string name="email">Email</string>
     <string name="text_login">Login</string>
@@ -15,7 +14,7 @@
     <string name="location">Location</string>
     <string name="description">Description</string>
     <string name="furniture">Furniture</string>
-    <string name="item_name">Item Name</string>
+    <string name="item_name">Item</string>
     <string name="save">SAVE</string>
     <string name="todo">TODO</string>
     <string name="phone_number">Phone Number</string>
@@ -28,15 +27,21 @@
     <string name="dismiss">dismiss</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
-    <string name="search">search</string>
+    <string name="search">Search</string>
     <string name="add_item_button">add_item_button</string>
     <string name="take_photo">Take Photo</string>
     <string name="select">Select</string>
     <string name="logout">logout</string>
+    <string name="sign_up">SIGN UP</string>
+    <string name="category">category</string>
 
     <string-array name="categories">
         <item>Furniture</item>
-        <item>Electric</item>
+        <item>Electronics</item>
+        <item>Clothing and Accessories</item>
+        <item>Vehicles</item>
+        <item>Tools and Equipment</item>
+        <item>Home and Garden</item>
     </string-array>
 
 </resources>

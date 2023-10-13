@@ -1,4 +1,4 @@
-package com.example.reusemarket.adapters
+package com.example.reusemarket.views.user
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -18,11 +18,9 @@ class UserItemAdapter(
         fun onEditItemClicked(allItem: AllItem)
     }
 
-
     interface OnDeleteClicked {
         fun onDeleteItemClicked(allItem: AllItem)
     }
-
 
     inner class UserItemViewHolder(val binding: UserItemListBinding) :
         RecyclerView.ViewHolder(binding.root)
@@ -49,7 +47,6 @@ class UserItemAdapter(
                 .into(holder.binding.itemImage)
 
         }
-
         holder.binding.delete.setOnClickListener {
             onDeleteClicked?.onDeleteItemClicked(currentItem)
         }

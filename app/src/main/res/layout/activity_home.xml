@@ -50,5 +50,7 @@
             app:menu="@menu/bottom_nav_menu"
             tools:ignore="VisualLintBottomNav" />
 
+
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

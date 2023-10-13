@@ -1,4 +1,4 @@
-package com.example.reusemarket.adapters
+package com.example.reusemarket.views.home
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -30,15 +30,14 @@ class AllItemAdapter(private val AllItemList: ArrayList<AllItem>) :
     override fun getItemCount(): Int = AllItemList.size
 
     override fun onBindViewHolder(holder: AllItemViewHolder, position: Int) {
-        //val currentItem: AllItem = allItem[position]
-        val currentItem: AllItem = AllItemList[position]
 
+        val currentItem: AllItem = AllItemList[position]
         holder.binding.itemName.text = currentItem.name
-        holder.binding.txtLocation.text = currentItem.category
+        holder.binding.txtCategory.text = currentItem.category
+        holder.binding.txtLocation.text = currentItem.location
         currentItem.image_url?.let { imageUrl ->
-            val imageUriString = imageUrl.toString()
             Glide.with(holder.itemView)
-                .load(imageUriString)
+                .load(imageUrl)
                 .into(holder.binding.itemImage)
 
         }

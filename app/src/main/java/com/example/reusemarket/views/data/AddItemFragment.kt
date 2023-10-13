@@ -1,6 +1,7 @@
 package com.example.reusemarket.views.data
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -8,13 +9,17 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
+import com.example.reusemarket.HomeActivity
 import com.example.reusemarket.R
 import com.example.reusemarket.cameraX.MyCameraActivity
 import com.example.reusemarket.constants.gone
@@ -24,7 +29,9 @@ import com.example.reusemarket.databinding.ImageCaptureBottomSheetBinding
 import com.example.reusemarket.model.AllItem
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
-
+/**
+ * A fragment for adding a new item or editing an existing one.
+ */
 class AddItemFragment : Fragment() {
 
     private lateinit var binding: FragmentAddItemBinding
@@ -51,6 +58,10 @@ class AddItemFragment : Fragment() {
         binding = FragmentAddItemBinding.inflate(inflater, container, false)
 
         viewModel = ViewModelProvider(requireActivity())[AddItemViewModel::class.java]
+
+        (requireActivity() as HomeActivity).findViewById<View>(R.id.bottomNavigationView)?.visibility =
+            View.GONE
+
 
         viewModel.toastMessage.observe(viewLifecycleOwner) { message ->
             message?.let {
@@ -84,7 +95,7 @@ class AddItemFragment : Fragment() {
                 disableEnableControls(true, binding.addItemLayout)
                 binding.btnAddItem.isEnabled = true
                 binding.progressBar.gone()
-                clearTextFields()
+               // fillData()
 
             }
 
@@ -108,6 +119,11 @@ class AddItemFragment : Fragment() {
         }
 
         binding.btnAddItem.setOnClickListener {
+
+            // Close the keyboard
+            val imm =
+                requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(view.windowToken, 0)
 
             if (validateFields()) {
                 val name = binding.etItemName.text.toString()
@@ -135,12 +151,58 @@ class AddItemFragment : Fragment() {
                 Log.e("TAG", "Data Added")
 
             }
+            //goToNextInput
+            binding.etItemName.setOnEditorActionListener { _, actionId, _ ->
+                if (actionId == EditorInfo.IME_ACTION_NEXT) {
+                    binding.etCategory.requestFocus() // Move focus to the next EditText
+                    true
+                } else {
+                    false
+                }
+            }
+            binding.autoCompleteTextView.setOnEditorActionListener { _, actionId, _ ->
+                if (actionId == EditorInfo.IME_ACTION_NEXT) {
+                    // Move focus to the next EditText or view
+                    binding.etLocation.requestFocus()
+
+                    true
+                } else {
+                    false
+                }
+            }
+            binding.etLocation.setOnEditorActionListener { _, actionId, _ ->
+                if (actionId == EditorInfo.IME_ACTION_NEXT) {
+                    binding.etPhoneNumber.requestFocus() // Move focus to the next EditText
+                    true
+                } else {
+                    false
+                }
+            }
+            binding.etPhoneNumber.setOnEditorActionListener { _, actionId, _ ->
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    binding.etDescription.requestFocus() // Move focus to the last EditText
+
+                    true
+                } else {
+                    false
+                }
+            }
+            binding.etDescription.setOnEditorActionListener { _, actionId, _ ->
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    // Move the focus to the button
+                    binding.btnAddItem.requestFocus()
+
+                    true
+                } else {
+                    false
+                }
+            }
 
 
         }
 
-
     }
+
     private fun clearTextFields() {
         binding.etItemName.text?.clear()
         binding.autoCompleteTextView.text?.clear()
@@ -148,6 +210,11 @@ class AddItemFragment : Fragment() {
         binding.etPhoneNumber.text?.clear()
         binding.etDescription.text?.clear()
     }
+
+    private fun navigateToUserProfile() {
+        findNavController().navigate(R.id.userFragment)
+    }
+
     private fun validateFields(): Boolean {
         if (imageUri?.toString().isNullOrEmpty() && item.image_url.isNullOrEmpty()) {
             Toast.makeText(requireContext(), "Please select an image first", Toast.LENGTH_LONG)
@@ -181,10 +248,13 @@ class AddItemFragment : Fragment() {
         return true
     }
 
+    //fill data object
     private fun fillData() {
         binding.etItemName.setText(item.name)
         binding.autoCompleteTextView.setText(item.category)
-
+        binding.etLocation.setText(item.location)
+        binding.etPhoneNumber.setText(item.phoneNumber)
+        binding.etDescription.setText(item.description)
         Glide.with(this)
             .load(item.image_url)
             .into(binding.itemImageView)
@@ -242,10 +312,8 @@ class AddItemFragment : Fragment() {
             .load(imageUri)
             .into(binding.itemImageView)
         binding.imageButton.visibility = View.GONE
-
         // Save the selected image URI in a property for later use
         this.imageUri = imageUri
     }
-
 
 }

@@ -9,16 +9,19 @@ import kotlinx.coroutines.tasks.await
 import java.util.UUID
 import javax.inject.Inject
 
+/**
+ * Implementation of the [DataRepository] interface for handling operations related to item data.
+ */
 class DataRepositoryImpl @Inject constructor(
-     firestore: FirebaseFirestore,
-     firebaseStorage: FirebaseStorage,
+    firestore: FirebaseFirestore,
+    firebaseStorage: FirebaseStorage,
 
     ) : DataRepository {
 
     private val itemData = firestore.collection("items")
     private val imageRef = firebaseStorage.reference.child("images")
     override suspend fun addDataToItemData(allItem: AllItem): Result<Unit> {
-          val imageUri = allItem.itemImage
+        val imageUri = allItem.itemImage
 
         return try {
             if (imageUri == null) {
@@ -29,9 +32,7 @@ class DataRepositoryImpl @Inject constructor(
 
             val uploadTask = imageStorageRef.putFile(imageUri).await()
             val downloadUrl = uploadTask.storage.downloadUrl.await()
-            // Save the download URL and name in Firestore
-            //furniture item
-            val furnitureItem = hashMapOf(
+            val usedItem = hashMapOf(
                 "image_url" to downloadUrl.toString(),
                 "name" to allItem.name,
                 "category" to allItem.category,
@@ -41,7 +42,7 @@ class DataRepositoryImpl @Inject constructor(
                 "description" to allItem.description,
 
                 )
-            itemData.add(furnitureItem).await()
+            itemData.add(usedItem).await()
             Result.success(Unit)
 
         } catch (e: Exception) {
@@ -59,13 +60,10 @@ class DataRepositoryImpl @Inject constructor(
             if (imageUri != null) {
                 val imageFileName = "${System.currentTimeMillis()}_${UUID.randomUUID()}.jpg"
                 val imageStorageRef = imageRef.child(imageFileName)
-
                 val uploadTask = imageStorageRef.putFile(imageUri).await()
                 downloadUrl = uploadTask.storage.downloadUrl.await().toString()
             }
-
-
-            val furnitureItem = mapOf(
+            val usedItem = mapOf(
                 "imageUrl" to downloadUrl,
                 "name" to allItem.name,
                 "category" to allItem.category,
@@ -74,8 +72,8 @@ class DataRepositoryImpl @Inject constructor(
                 "phoneNumber" to allItem.phoneNumber,
                 "description" to allItem.description,
 
-            )
-            allItem.itemId?.let { itemData.document(it).update(furnitureItem).await() }
+                )
+            allItem.itemId?.let { itemData.document(it).update(usedItem).await() }
             Result.success(Unit)
 
         } catch (e: Exception) {
@@ -92,7 +90,6 @@ class DataRepositoryImpl @Inject constructor(
     }
 
     override suspend fun deleteItem(allItem: AllItem) {
-
         allItem.itemId?.let {
             FirebaseFirestore.getInstance().collection("items").document(it).delete().await()
         }

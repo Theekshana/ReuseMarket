@@ -52,6 +52,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-firestore:24.4.1'
     implementation 'com.google.firebase:firebase-storage-ktx:20.2.1'
     implementation 'androidx.camera:camera-lifecycle:1.2.3'
+    implementation 'androidx.coordinatorlayout:coordinatorlayout:1.2.0'
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
