@@ -1,0 +1,10 @@
+This application offers a platform for users to share and distribute used items.
+
+1.Users can log into the application using their email and password, or they can sign in with their Google account.
+
+2.In the Home activity, users can explore the complete list of available items.
+
+3.Users have the option to search for specific items within the application.
+
+4.Users can upload their used items along with images, either by capturing images or choosing from their gallery. 
+  Additionally, they can edit or delete the details of their listed items.

@@ -12,6 +12,9 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+/**
+ * ViewModel for managing user-related data and actions.
+ */
 @HiltViewModel
 class UserViewModel @Inject constructor(
     private val repository: DataRepositoryImpl,

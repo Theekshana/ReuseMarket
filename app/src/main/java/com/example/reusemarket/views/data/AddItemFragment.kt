@@ -22,6 +22,8 @@ import com.bumptech.glide.Glide
 import com.example.reusemarket.HomeActivity
 import com.example.reusemarket.R
 import com.example.reusemarket.cameraX.MyCameraActivity
+import com.example.reusemarket.constants.NetworkUtils
+import com.example.reusemarket.constants.NoInternetErrorDialogFragment
 import com.example.reusemarket.constants.gone
 import com.example.reusemarket.constants.show
 import com.example.reusemarket.databinding.FragmentAddItemBinding
@@ -63,14 +65,6 @@ class AddItemFragment : Fragment() {
             View.GONE
 
 
-        viewModel.toastMessage.observe(viewLifecycleOwner) { message ->
-            message?.let {
-                Toast.makeText(requireContext(), it, Toast.LENGTH_LONG).show()
-                viewModel.clearToastMessage()
-            }
-        }
-
-
         return binding.root
     }
 
@@ -91,11 +85,11 @@ class AddItemFragment : Fragment() {
                 disableEnableControls(false, binding.addItemLayout)
                 binding.btnAddItem.isEnabled = false
                 binding.progressBar.show()
+
             } else {
                 disableEnableControls(true, binding.addItemLayout)
                 binding.btnAddItem.isEnabled = true
                 binding.progressBar.gone()
-               // fillData()
 
             }
 
@@ -142,15 +136,28 @@ class AddItemFragment : Fragment() {
 
                 )
 
-                if (item.itemId.isNullOrEmpty()) {
-                    viewModel.addItemToFirestore(itemMarketItem)
+                if (NetworkUtils.hasInternetConnection(requireContext())) {
+                    if (item.itemId.isNullOrEmpty()) {
+                        viewModel.addItemToFirestore(itemMarketItem)
+
+
+                    } else {
+                        viewModel.updateItemData(itemMarketItem)
+                    }
+                    viewModel.toastMessage.observe(viewLifecycleOwner) {
+                        it?.let {
+                            Toast.makeText(requireContext(), it, Toast.LENGTH_LONG).show()
+                            viewModel.clearToastMessage()
+                            navigateToUserProfile()
+                        }
+                    }
+
                 } else {
-                    viewModel.updateItemData(itemMarketItem)
+                    val dialogFragment = NoInternetErrorDialogFragment()
+                    dialogFragment.show(childFragmentManager, "noInternetErrorDialog")
                 }
-
-                Log.e("TAG", "Data Added")
-
             }
+
             //goToNextInput
             binding.etItemName.setOnEditorActionListener { _, actionId, _ ->
                 if (actionId == EditorInfo.IME_ACTION_NEXT) {
@@ -201,14 +208,6 @@ class AddItemFragment : Fragment() {
 
         }
 
-    }
-
-    private fun clearTextFields() {
-        binding.etItemName.text?.clear()
-        binding.autoCompleteTextView.text?.clear()
-        binding.etLocation.text?.clear()
-        binding.etPhoneNumber.text?.clear()
-        binding.etDescription.text?.clear()
     }
 
     private fun navigateToUserProfile() {

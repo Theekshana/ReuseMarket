@@ -142,6 +142,10 @@ class MainActivity : AppCompatActivity() {
                     showProgress(false)
                     showError(it.error)
                 }
+
+                else -> {
+
+                }
             }
         }
     }

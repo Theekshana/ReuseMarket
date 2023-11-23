@@ -1,9 +1,15 @@
 package com.example.reusemarket.constants
 
+import android.app.Dialog
 import android.content.Context
 import android.content.DialogInterface
+import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.widget.Button
 import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.DialogFragment
+import com.example.reusemarket.R
 
 /**
  * Extension function to set the visibility of a View to VISIBLE.
@@ -40,5 +46,22 @@ fun Context.showAlertYeNo(
             negativeClick?.invoke()
         }
     }.show()
+}
+
+class NoInternetErrorDialogFragment : DialogFragment() {
+
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        val view =
+            LayoutInflater.from(requireContext()).inflate(R.layout.error_dialog_fragment, null)
+        val builder = android.app.AlertDialog.Builder(requireContext())
+
+        val okButton = view.findViewById<Button>(R.id.btnRetry)
+        okButton.setOnClickListener {
+            dialog?.dismiss()
+        }
+
+        builder.setView(view)
+        return builder.create()
+    }
 }
 

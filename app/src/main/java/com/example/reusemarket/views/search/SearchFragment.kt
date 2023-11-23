@@ -37,7 +37,7 @@ class SearchFragment : Fragment(), SearchItemAdapter.OnItemClickedListener {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         binding = FragmentSearchBinding.inflate(inflater, container, false)
         viewModel = ViewModelProvider(requireActivity())[SearchViewModel::class.java]
@@ -91,6 +91,8 @@ class SearchFragment : Fragment(), SearchItemAdapter.OnItemClickedListener {
                     myRecyclerViewAdapter.onItemClickedListener = this
                     binding.searchList.adapter = myRecyclerViewAdapter
                 }
+
+                else -> {}
             }
         }
     }

@@ -36,10 +36,10 @@ class ListFragment : Fragment(), AllItemAdapter.OnItemClickedListener {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View? {
+    ): View {
         binding = FragmentListBinding.inflate(inflater, container, false)
 
-        viewModel = ViewModelProvider(requireActivity())[ListViewModel::class.java]
+       viewModel = ViewModelProvider(requireActivity())[ListViewModel::class.java]
 
         (requireActivity() as HomeActivity).findViewById<View>(R.id.bottomNavigationView)?.visibility =
             View.VISIBLE
@@ -89,16 +89,18 @@ class ListFragment : Fragment(), AllItemAdapter.OnItemClickedListener {
         viewModel.dateListState.observe(viewLifecycleOwner) {
             when (it) {
                 is UIState.Failure -> {
-                    binding.progressBar.hide()
+                    binding.lottieProgressBar.hide()
                     Toast.makeText(requireContext(), it.toString(), Toast.LENGTH_LONG).show()
                 }
 
                 UIState.Loading -> {
-                    binding.progressBar.show()
+                    val lottieProgressBar = binding.lottieProgressBar
+                    lottieProgressBar.show()
+                    lottieProgressBar.playAnimation()
                 }
 
                 is UIState.Success<*> -> {
-                    binding.progressBar.hide()
+                    binding.lottieProgressBar.hide()
                     val myRecyclerViewAdapter =
                         AllItemAdapter(
                             (viewModel.marketItemList.value ?: emptyList()) as ArrayList<AllItem>

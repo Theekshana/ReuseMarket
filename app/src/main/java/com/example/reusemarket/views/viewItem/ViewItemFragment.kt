@@ -14,6 +14,7 @@ import com.example.reusemarket.model.AllItem
 /**
  * Fragment responsible for displaying details of a selected item.
  */
+@Suppress("DEPRECATION")
 class ViewItemFragment : Fragment() {
 
     private var item: AllItem? = null
@@ -22,7 +23,7 @@ class ViewItemFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         fragmentViewItemBinding = FragmentViewItemBinding.inflate(inflater, container, false)
         return fragmentViewItemBinding.root

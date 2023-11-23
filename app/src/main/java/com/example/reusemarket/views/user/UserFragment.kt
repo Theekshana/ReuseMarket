@@ -45,7 +45,7 @@ class UserFragment : Fragment(), UserItemAdapter.OnDeleteClicked, UserItemAdapte
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         viewModel = ViewModelProvider(requireActivity())[UserViewModel::class.java]
         binding = FragmentUserBinding.inflate(inflater, container, false)
